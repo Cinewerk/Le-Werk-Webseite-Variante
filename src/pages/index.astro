@@ -681,11 +681,27 @@ const faqs = [
         <span class="editorial editorial--kicker">Erzähl uns</span>{' '}
         von deinem Projekt
       </h2>
-      <div class="cta__actions">
-        <a class="btn btn--on-dark" href={withBase("/kontakt")}>
-          Projekt anfragen <span class="btn__arrow" aria-hidden="true">→</span>
+      <!-- Die Überschrift fragt, die Zeilen darunter sind die Antworten:
+           drei Wege, jeder eine große klickbare Zeile mit Pfeil. Das
+           Muster steht seit jeher auf der Kontaktseite bei E-Mail und
+           Telefon (.contact__big) und ist hier übernommen.
+
+           "Projekt anfragen" steht als erste Zeile und nicht mehr als
+           bernsteinfarbener Knopf. Die Reihenfolge ist die Schwelle: erst
+           das Formular, dann die Adresse, dann der Hörer. -->
+      <div class="wege">
+        <a class="weg" href={withBase("/kontakt")}>
+          Projekt anfragen
+          <span class="weg__pfeil" aria-hidden="true">→</span>
         </a>
-        <a class="btn btn--ghost" href="mailto:contact@lewerk.de">contact@lewerk.de</a>
+        <a class="weg" href="mailto:contact@lewerk.de">
+          contact@lewerk.de
+          <span class="weg__pfeil" aria-hidden="true">→</span>
+        </a>
+        <a class="weg" href="tel:+4922129256496">
+          +49&nbsp;221&nbsp;29256496
+          <span class="weg__pfeil" aria-hidden="true">→</span>
+        </a>
       </div>
     </div>
   </section>
@@ -1053,22 +1069,9 @@ const faqs = [
   .section.faq :focus-visible,
   .section.cta :focus-visible { outline-color: #fff; }
 
-  /* "Projekt anfragen" trägt Bernstein als Fläche — der einzige Knopf der
-     Seite, und damit genau das, wofür die Farbe hier steht: das, was man
-     anfassen kann. Schwarz darauf steht bei 10.83:1.
-
-     Der Hover dunkelt die Fläche ab statt sie zu wechseln: dieselbe
-     Farbe, 18 Prozent Schwarz darin. Schwarz steht darauf bei 8.6:1. */
-  .cta .btn--on-dark {
-    background: var(--marke);
-    color: #0d0d0d;
-    border-color: var(--marke);
-  }
-
-  .cta .btn--on-dark:hover {
-    background: color-mix(in srgb, var(--marke) 82%, #000);
-    color: #0d0d0d;
-  }
+  /* Hier stand die Regel für den bernsteinfarbenen Knopf "Projekt
+     anfragen". Der Abschluss trägt keine Knöpfe mehr, sondern drei große
+     Zeilen mit Pfeil — siehe .wege weiter unten. */
 
   /* Der Footer liegt eine Stufe tiefer als die Abschnitte — dieselbe
      Logik wie vorher Petrol-Deep zu Petrol-Deeper. Er steht im Layout,
@@ -1277,7 +1280,34 @@ const faqs = [
      Schwarz auf Bernstein und nicht Weiß: #0d0d0d steht auf #FFB300 bei
      10.83:1, Weiß nur bei 1.79 — auf dem hellen Gelb wäre die
      Beschriftung schlicht weg. */
+  /* DIE PILLE LEGT SICH ÜBER DEN ZEIGER, und das ist die Bedingung dafür,
+     dass sie überhaupt bernsteinfarben aussieht.
+
+     Der Zeiger ist eine weiße Scheibe mit mix-blend-mode: difference — er
+     kehrt um, was unter ihm liegt. #FFB300 umgekehrt ist
+     rgb(255-255, 255-179, 255-0), also rgb(0, 76, 255), und das ist auf
+     drei Stellen genau --akzent. Die Pille sah unter der Scheibe deshalb
+     exakt so blau aus wie die Füllung, die sie ersetzt hat — und sie war
+     nie anders zu sehen, weil man beim Überfahren zwangsläufig die
+     Scheibe darauf hat.
+
+     Die Farbe umzudrehen wäre der naheliegende Trick und geht schief: Die
+     Pille misst 50 x 24px, ihre Diagonale 55, die Scheibe hat aber nur
+     46px Radius. Steht der Zeiger am Rand der Pille, ragt ihr anderes
+     Ende aus der Scheibe heraus — dort stünde dann das echte Blau. Am
+     Bild geprüft, der Streifen ist deutlich zu sehen.
+
+     Also andersherum: Die Pille wird über die Scheibe gehoben. Dann ist
+     Bernstein Bernstein, an jeder Stelle, und die Scheibe bekommt ein
+     pillenförmiges Loch.
+
+     Nur im Hover-Zustand, nicht dauerhaft: Ein z-index über der
+     Zeigerebene liegt auch über dem festen Kopf, und eine Pille, die beim
+     Scrollen durch die Kopfleiste wandert, wäre schlimmer als das
+     Problem. Wer sie überfährt, hat sie ohnehin nicht unter dem Kopf. */
   .werk__pille:hover {
+    position: relative;
+    z-index: calc(var(--z-overlay) + 200);
     background: var(--marke);
     border-color: var(--marke);
     color: #0d0d0d;
@@ -2319,11 +2349,64 @@ const faqs = [
   .cta__inner { display: grid; justify-items: start; gap: var(--space-3); }
   .cta__title { max-width: 16ch; }
 
-  .cta__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
+  /* DIE DREI WEGE als große Zeilen mit nachlaufendem Pfeil. Das Muster
+     ist nicht neu erfunden, sondern von der Kontaktseite geholt: Dort
+     stehen E-Mail und Telefon seit jeher so, als .contact__big. Der
+     Abschluss der Startseite ist der Ort, an dem es trägt — die
+     Überschrift stellt die Frage, die Zeilen darunter sind die Antworten.
+
+     Hier standen zwei Knöpfe nebeneinander, "Projekt anfragen" auf
+     bernsteinfarbener Fläche und die Adresse als Umriss. Beide sind zu
+     Zeilen geworden. Bernstein ist deshalb nicht weg: Es sitzt jetzt im
+     Überfahren, wie an jeder anderen anfassbaren Stelle dieser Seite.
+
+     Größer als auf der Kontaktseite (dort 20 bis 28px): Diese Zeilen
+     stehen unter einer Überschrift, die 60px trägt, und sind das Letzte,
+     was die Seite sagt. Die Linien dazwischen sind dieselben Haarlinien
+     wie an den Dienstzeilen und der FAQ. */
+  .wege {
+    display: grid;
+    width: 100%;
     margin-top: var(--space-2);
+    border-top: 1px solid var(--line);
+  }
+
+  .weg {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    min-height: 88px;
+    padding-block: var(--space-3);
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-ui);
+    font-size: clamp(1.375rem, 3.4vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    color: var(--ink);
+    overflow-wrap: anywhere;
+    transition: color var(--dur) var(--ease-out);
+  }
+
+  .weg:hover { color: var(--marke); }
+
+  /* Der Pfeil steht immer in Bernstein und nicht erst beim Überfahren:
+     Er ist die Ansage, dass die Zeile irgendwohin führt. Beim Überfahren
+     rückt er nach — dieselbe Bewegung wie auf der Kontaktseite, nur ein
+     paar Pixel weiter, weil die Zeile hier größer ist. */
+  .weg__pfeil {
+    flex-shrink: 0;
+    color: var(--marke);
+    transition: transform var(--dur) var(--ease-out);
+  }
+
+  .weg:hover .weg__pfeil { transform: translateX(6px); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .weg,
+    .weg__pfeil { transition: none; }
   }
 
   /* ── Breakpoints ──────────────────────────────────────────────────────── */
@@ -2468,6 +2551,9 @@ const faqs = [
 
     .zeiger.is-gross { width: 92px; height: 92px; }
     .zeiger.is-gross span { opacity: 1; }
+
+    /* Die Scheibe bleibt groß, auch über einer Pille — die Pille legt sich
+       stattdessen über sie. Warum, steht bei .werk__pille:hover. */
   }
 
   /* ── Reduced Motion ───────────────────────────────────────────────────── */
@@ -2761,6 +2847,7 @@ const faqs = [
       });
       el.addEventListener('pointerleave', () => zeiger.classList.remove('is-gross'));
     });
+
   }
 </script>
 
