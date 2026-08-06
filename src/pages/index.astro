@@ -378,7 +378,7 @@ const faqs = [
         <span class="brand">Le Werk</span> ist ein Visual Content Studio mit
         Sitz im Rheinauhafen in Köln. Spezialisiert auf{' '}
         <i class="statement__kursiv">Storytelling, Film und Foto</i> für{' '}
-        <em>Social und Branded Content.</em>
+        <em class="statement__leistung"><strong>Social</strong> und Branded Content.</em>
       </p>
       <p class="statement__meta">
         Konzept · Produktion · Postproduktion · Based in Köln, Booked Worldwide
@@ -1102,6 +1102,74 @@ const faqs = [
     font-weight: 500;
     font-size: 1.05em;
     letter-spacing: 0;
+  }
+
+  /* Was am Ende steht, ist die Leistung — und die soll man sehen. Zwei
+     Stufen statt einer, weil "vor allem das Social" gilt:
+
+       Social                800   so schwer wie die Wortmarke
+       und Branded Content   600   eine Stufe über dem Absatz (500)
+
+     Poppins liegt hier in 400, 500, 600 und 800 vor; 700 gibt es nicht
+     und würde vom Browser verzerrt gerechnet. Die 600 sind deshalb der
+     einzige Zwischenschritt, den es gibt — und er reicht: Der Absatz
+     läuft in 500, der Unterschied ist auf 46px gut zu sehen.
+
+     Kein dritter Farbwert und keine Linie. Der Absatz trägt schon zwei
+     Auszeichnungen — die Wortmarke in ExtraBold und die drei Disziplinen
+     in kursiver Bodoni. Eine dritte Art zu markieren machte aus dem Satz
+     eine Musterkarte. */
+  .statement__leistung { font-weight: 600; }
+
+  /* "Social" trägt zusätzlich einen Strich, der beim Scrollen von links
+     hereinläuft, und färbt sich dabei stufenlos auf.
+
+     --auf ist der Fortschritt von 0 bis 1; geschrieben wird er vom
+     Skript am Ende der Datei, aus demselben Lauf, der den Absatz Wort
+     für Wort auffärbt. Ohne Skript steht er auf 1 — dann ist alles
+     einfach da. Mit Skript startet er bei 0, siehe unten. */
+  .statement__leistung strong {
+    position: relative;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  /* Der Strich in Bernstein, nicht im Blau des Satzes: Ein blauer Strich
+     unter blauer Schrift wäre eine Verdickung, kein Zeichen. Bernstein
+     ist die Farbe der Wortmarke — dieselbe Hand zeigt hier auf die
+     Leistung, die dort auf den Namen zeigt. Auf Schwarz steht sie bei
+     10.83:1.
+
+     scaleX und nicht width: Der Browser rechnet eine Verzerrung auf der
+     Grafikkarte, eine Breite muss er im Umbruch neu setzen. Bei einem
+     Wert, der an jedem Scrollbild neu geschrieben wird, ist das der
+     Unterschied zwischen ruhig und ruckelig. */
+  .statement__leistung strong::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.02em;
+    height: 0.055em;
+    background: var(--marke);
+    transform: scaleX(var(--auf, 1));
+    transform-origin: left center;
+  }
+
+  /* Das Wort selbst läuft stufenlos mit, statt wie die übrigen Wörter in
+     einem Schritt umzuspringen. Beide Wähler, weil das Skript dem Wort
+     unterwegs .is-an anhängt und dessen Regel sonst gewinnt. */
+  .statement__leistung strong :global(.wort),
+  .statement__leistung strong :global(.wort.is-an) {
+    color: color-mix(in srgb, var(--akzent) calc(20% + 80% * var(--auf, 1)), transparent);
+    transition: none;
+  }
+
+  /* Mit Skript beginnt beides bei null. Ohne Skript bleibt --auf auf 1,
+     und der Satz steht vollständig da — dieselbe Bauart wie bei der
+     Meta-Zeile darunter. */
+  @media (scripting: enabled) {
+    .statement__leistung strong { --auf: 0; }
   }
 
   /* Die Wörter erzeugt das Skript am Ende der Datei — deshalb :global,
@@ -2344,6 +2412,7 @@ const faqs = [
        die Meta-Zeile bekommt ihre Deckung zurück. Das Skript prüft
        dieselbe Abfrage und rührt beide dann nicht mehr an. */
     .statement__text :global(.wort) { color: var(--akzent); transition: none; }
+    .statement__leistung strong { --auf: 1; }
     .statement__meta { opacity: 1; }
   }
 </style>
@@ -2394,6 +2463,12 @@ const faqs = [
     zerlegen(absatz);
     const woerter = Array.from(absatz.querySelectorAll<HTMLElement>('.wort'));
 
+    // "Social" bekommt seinen eigenen Fortschritt: den Strich darunter
+    // und die Farbe des Wortes. Er läuft über das letzte Stück des
+    // Absatzlaufs, damit der Strich dann steht, wenn der Satz zu Ende
+    // gelesen ist — und nicht schon in der Mitte.
+    const starkesWort = absatz.querySelector<HTMLElement>('.statement__leistung strong');
+
     // Der Lauf beginnt, wenn der Absatz auf 82 Prozent der Fensterhöhe
     // steht, und ist kurz vor der Mitte fertig. Die Strecke ist seine
     // eigene Höhe plus 42 Prozent Fensterhöhe — dadurch dauert ein langer
@@ -2409,6 +2484,16 @@ const faqs = [
       const stehen = Math.round(anteil * woerter.length);
 
       woerter.forEach((wort, i) => wort.classList.toggle('is-an', i < stehen));
+
+      // Der Strich zieht über die zweite Hälfte des Laufs durch. Früher
+      // anzufangen brächte nichts: Solange die Wörter davor noch gedimmt
+      // sind, zeigt ein Strich auf etwas, das noch niemand gelesen hat.
+      if (starkesWort) {
+        starkesWort.style.setProperty(
+          '--auf',
+          String(Math.min(1, Math.max(0, (anteil - 0.5) / 0.45)))
+        );
+      }
 
       // Die Meta-Zeile kommt zum Schluss: Sie blendet über das letzte
       // Viertel des Laufs ein und steht damit sichtbar nach dem Absatz.
