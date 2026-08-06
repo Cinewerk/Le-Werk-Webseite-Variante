@@ -1445,12 +1445,20 @@ const faqs = [
     position: relative;
     display: flex;
     align-items: center;
+    /* MITTIG, NICHT LINKSBÜNDIG. Die Logos sind unterschiedlich breit —
+       Johnson & Johnson läuft 128px, EA 34. Linksbündig hing die Lücke
+       zwischen zwei Marken deshalb daran, wie breit die linke zufällig
+       ist: Neben einer schmalen Bildmarke klaffte fast eine ganze Spalte,
+       neben einer langen Wortmarke fast nichts. Mittig ist der Leerraum
+       um jedes Logo symmetrisch, und die Reihe liest sich als gleichmäßig
+       gesetzt — so setzt man Logowände.
+
+       Der Preis: Die erste Spalte steht nicht mehr auf der Textkante der
+       Marginalie darüber. Das ist in Ordnung — die Logos sind Bilder in
+       Feldern, keine Textzeilen. */
+    justify-content: center;
     width: 100%;
     height: calc(var(--logo-breite) / 2.35);
-    /* Waagerecht dieselbe Polsterung wie an den Dienstzeilen: Dort rückt
-       der Inhalt um bis zu 20px von der Kante ein, die Fläche läuft aber
-       bis an sie heran. Damit stehen die Logos auf derselben Kante wie
-       die Ziffern der Services darunter. */
     padding: clamp(1.25rem, 2.6vw, 2.25rem) clamp(10px, 1.5vw, 20px);
     box-sizing: content-box;
   }
