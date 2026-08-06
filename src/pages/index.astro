@@ -1973,32 +1973,29 @@ const faqs = [
      der Kachelbreite. Dann steht der Text kleiner in der Fläche, aber
      nichts fehlt und nichts läuft über.
 
-     Blocksatz mit Silbentrennung, und beides gehört zusammen. Gemessen
-     an Satz 01, zehn Zeilen, 261px Spalte — Abstand jeder Zeile zur
-     rechten Kante in Pixeln:
+     KEIN BLOCKSATZ. Er stand hier einen Anlauf lang und hat sieben von
+     zehn Zeilen bündig gestellt — an Satz 01 gemessen. An Satz 02 riss
+     er sie auseinander: "Based in Köln," über die volle Spalte gezogen,
+     mit Löchern zwischen den Wörtern, die breiter waren als die Wörter
+     selbst. Bei 18 Zeichen je Zeile hat der Browser zu wenig Fugen, auf
+     die er den Rest verteilen kann.
 
-       linksbündig   61 · 41 · 57 · 36 · 46 · 69 · 17 · 62 · 97 · 152
-       Blocksatz      0 ·  0 ·  0 ·  0 · 46 ·  0 ·  0 ·  0 · 97 · 152
+     Also linksbündig, mit ausfransender rechter Kante — so wie jeder
+     gesetzte Absatz aussieht, dessen Spalte schmal ist.
 
-     Sieben von zehn Zeilen stehen damit bündig. Die beiden übrigen
-     tragen je ein einzelnes langes Wort — "schlagkräftiges",
-     "Spezialisten" —, und eine Zeile aus einem Wort lässt sich nicht
-     spreizen. Das ist die Grenze deutscher Komposita bei 18 Zeichen je
-     Zeile, keine Einstellung.
-
-     Die Trennung allein bringt schon etwas: Ohne sie liegt die größte
-     Lücke bei 132px statt 97. Die Sprache steht am html-Element, der
-     Browser trennt also nach deutschen Regeln.
-
-     text-align-last bleibt ungesetzt: Die letzte Zeile läuft frei aus,
-     wie in jedem gesetzten Absatz. Auf volle Breite gezogen stünden ihre
-     drei Wörter als Buchstabenkette da. */
+     Die Silbentrennung bleibt und nimmt der Kante etwas von ihrer
+     Unruhe: gemessen fällt die größte Lücke von 132 auf 97px. Sie greift
+     aber erst ab zwölf Zeichen und lässt links wie rechts mindestens
+     fünf stehen — sonst zerlegt sie "worldwide" zu "worldwi-de", und ein
+     englisches Wort nach deutschen Regeln getrennt sieht nach Fehler
+     aus. Lange Komposita wie "Räumlichkeiten" trennt sie weiterhin, und
+     das ist im Deutschen der Normalfall. */
   .kulisse__satz p {
     font-size: 9cqi;
     line-height: 1.28;
     letter-spacing: -0.01em;
-    text-align: justify;
     hyphens: auto;
+    hyphenate-limit-chars: 12 5 5;
     color: #fff;
   }
 
