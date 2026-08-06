@@ -16,16 +16,33 @@
   --petrol-light: #5CC2D6;     /* Akzent AUF dunklem Grund — 7.8:1 */
   --petrol-tint: #E8F2F4;      /* sehr helle Fläche */
 
-  /* Der Akzent des schwarzen Seitenteils, von Simon gesetzt. Er trägt den
-     Positionsabsatz, die Pillen der Fotostrecken, die Ziffern der Gründe
-     und das Plus im FAQ.
+  /* Der Akzent des schwarzen Seitenteils. Er trägt den Positionsabsatz,
+     die Pillen der Fotostrecken, die Ziffern der Gründe, das Plus im FAQ,
+     die Sweeps und den Knopf.
 
-     Nachgemessen: auf #0d0d0d kommt er auf 3.00:1, auf Weiß auf 6.47.
-     Für Flächen mit weißer Schrift und für Bedienelemente (Schwelle 3.0)
-     reicht das; für kleinen Fließtext auf Schwarz nicht — dort steht er
-     deshalb nirgends. Die Ziffern der Gründe sind aria-hidden und
-     Schmuck, das Plus im FAQ ein Bedienelement genau auf der Schwelle. */
-  --akzent: #2451D8;
+     Im Browser nachgemessen: auf #0d0d0d 3.22:1, Weiß darauf 6.04. Wo
+     der Akzent Fläche ist — Knopf, Sweeps, Textkacheln —, trägt er
+     bequem. Als Schrift auf Schwarz steht er nur in den Ziffern, und
+     die sind aria-hidden und Schmuck.
+
+     Für das Plus im FAQ reicht 3.22 zwar (Bedienelemente: Schwelle
+     3.0), aber ohne Reserve. Dort steht deshalb die hellere Schwester. */
+  --akzent: #004CFF;
+  /* 20 Prozent Weiß im Akzent — ergibt #3370ff und hebt ihn von 3.22
+     auf 4.54:1. Gebraucht überall dort, wo der Akzent auf Schwarz für
+     sich stehen muss statt Fläche zu sein. */
+  --akzent-hell: color-mix(in srgb, #004CFF 80%, #fff);
+
+  /* Die Wortmarke steht in Bernstein — immer, auf jedem Grund und in
+     jedem Zustand des Kopfes. Sie ist damit das einzige Element der
+     Seite, das nie die Farbe wechselt.
+
+     Nachgemessen: auf Schwarz 10.83:1, auf dem tiefen Petrol der
+     Menüfläche 8.96 — überall bequem. Auf Weiß dagegen 1.79, und das
+     ist der Grund, warum sie eine Wortmarke bleiben muss und nie
+     Fließtext werden darf: Auf hellem Grund wäre sie nicht lesbar.
+     Auf dieser Seite steht sie nirgends darauf. */
+  --marke: #FFB300;
 
   /* --- Farben: Flächen --- */
   --paper: #FFFFFF;
@@ -511,8 +528,11 @@ button { cursor: pointer; }
    Die eine Ausnahme bleibt: über der dunklen Bühne ist sie weiß. Petrol
    auf dunklem Video wäre nicht lesbar. Der Menü-Button bleibt in beiden
    Fällen Ink beziehungsweise weiß — er ist Bedienelement, nicht Marke. */
-.header.is-solid .logo,
-.header:not([data-over-dark='true']) .logo { color: var(--petrol); }
+/* Eine Regel statt dreier Zustände. Vorher wechselte die Wortmarke
+   dreimal: weiß über der dunklen Bühne, Petrol im gescrollten Kopf,
+   Petrol auf jeder Unterseite. Jetzt steht sie überall in Bernstein —
+   auch im Menü, das dieselbe Ecke belegt. */
+.logo { color: var(--marke); }
 
 /* Volle Breite statt Container-Maximalbreite: Logo sitzt am linken,
    der Menü-Button am rechten Seitenrand. */
