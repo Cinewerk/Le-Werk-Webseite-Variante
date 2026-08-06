@@ -677,10 +677,18 @@ const faqs = [
        --petrol-deeper und setzt sich damit ab. -->
   <section class="section section--dark cta" aria-labelledby="cta-title">
     <div class="container container--breit cta__inner" data-reveal>
-      <h2 class="headline headline--xl cta__title" id="cta-title">
-        <span class="editorial editorial--kicker">Erzähl uns</span>{' '}
-        von deinem Projekt
-      </h2>
+      <!-- Marginalie plus Überschrift, gebaut wie der FAQ-Kopf ("Häufige
+           Fragen" über "Kurz beantwortet"). Vorher stand "Erzähl uns" als
+           kursive Bodoni-Zeile in der Überschrift selbst — auf den
+           Unterseiten ist das weiterhin der Kopfstil, hier auf der
+           Startseite war es die letzte Serifenzeile zwischen lauter
+           Marginalien-Köpfen. -->
+      <header class="cta__kopf">
+        <p class="label">Erzähl uns</p>
+        <h2 class="headline headline--xl cta__title" id="cta-title">
+          Von deinem Projekt
+        </h2>
+      </header>
       <!-- Die Überschrift fragt, die Zeilen darunter sind die Antworten:
            drei Wege, jeder eine große klickbare Zeile mit Pfeil. Das
            Muster steht seit jeher auf der Kontaktseite bei E-Mail und
@@ -2356,6 +2364,11 @@ const faqs = [
      sonst nirgends mehr hat. */
   .cta__inner { display: grid; justify-items: start; gap: var(--space-3); }
   .cta__title { max-width: 16ch; }
+
+  /* Derselbe Abstand wie zwischen "Häufige Fragen" und "Kurz
+     beantwortet" — die beiden Köpfe sollen als dasselbe Muster lesbar
+     sein. */
+  .cta__kopf .label { margin-bottom: var(--space-2); }
 
   /* DIE DREI WEGE als große Zeilen mit nachlaufendem Pfeil. Das Muster
      ist nicht neu erfunden, sondern von der Kontaktseite geholt: Dort
