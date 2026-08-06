@@ -123,14 +123,28 @@ const disziplinen = services
 // nehmen dessen Maße an — sie sind Kacheln im Feld, keine Absätze daneben.
 // Jeder Satz sitzt zwischen den Aufnahmen, die zu ihm gehören:
 //
-//   Reihe 1   Halle · Transporter · SATZ 01 · Loft        (alles vom Set)
-//   Reihe 2   Schnitt · Studio · Haus · Empfang           (Übergang)
-//   Reihe 3   Raststätte · SATZ 02 · Feierabend · Drohne  (alles vom Ort)
+//   Reihe 1   Halle · Transporter · SATZ 01 · Regie       (alles vom Set)
+//   Reihe 2   Schnitt · Loft · Studio · Büro               (Arbeit und Haus)
+//   Reihe 3   Krafthaus · SATZ 02 · Feierabend · Drohne    (alles vom Ort)
 //
-// Zwölf Plätze für zehn Aufnahmen und zwei Sätze — das geht nur auf,
-// weil zwei Bilder entfallen sind: die schwarzweiße Autobahn und die
-// Bürowand. Beide waren die schwächsten ihrer Reihe, und vierzehn Plätze
-// hätten die letzte Reihe halb leer gelassen.
+// Zwölf Plätze für zehn Aufnahmen und zwei Sätze. Entfallen sind dafür
+// vier Bilder: die schwarzweiße Autobahn und die alte Bürowand (beide
+// die schwächsten ihrer Reihe), dazu am 6. August 2026 der Sattelzug an
+// der Raststätte und der grüne Sessel — für die kamen zwei neue
+// Aufnahmen herein, die dasselbe besser zeigen:
+//
+//   Empfang       →  Büro im Krafthaus
+//                    Derselbe Raum, aber ganz: die grünen Sessel, der
+//                    Flipper, das Rundbogenfenster und das Licht darauf.
+//                    Der Sessel allein vor weißer Wand war ein Ausschnitt.
+//   Raststätte    →  Ansage vor dem Take
+//                    Ein Sattelzug zeigt eine Fahrt, keine Produktion.
+//                    Die neue Aufnahme zeigt beides, was hier zu zeigen
+//                    ist: jemanden an der Kamera und jemanden, der sagt,
+//                    was gedreht wird.
+//
+// Damit trägt Reihe 1 dreimal Set statt zweimal, und die Ortsangaben
+// stehen gesammelt in Reihe 3 beim Satz, der von ihnen spricht.
 //
 // Der Platz jedes Stücks entsteht aus seiner Nummer in der Liste; die
 // Spalte rechnet das Frontmatter mit, weil der Versatz je Spalte daran
@@ -166,14 +180,14 @@ const kulisseRoh = [
     vorspann: 'Erfahrung aus hunderten Produktionen:',
     satz: 'Wir kombinieren ein schlagkräftiges Kernteam mit kreativen Spezialisten aus verschiedenen Feldern.',
   },
-  { img: '/images/bts/bts-loft.jpg',        hoch: false, pille: 'Dreh',      titel: 'Körperstativ im Loft', alt: 'Zwei Personen an einer Kamera auf dem Körperstativ in einem hellen Studio' },
+  { img: '/images/bts/bts-regie.jpg',       hoch: false, pille: 'Dreh',      titel: 'Ansage vor dem Take',  alt: 'Zwei Männer bei der Arbeit: einer trägt die Kamera auf dem Körperstativ, der andere erklärt mit beiden Händen die nächste Einstellung' },
 
   { img: '/images/bts/bts-schnitt.jpg',     hoch: true,  pille: 'Post',      titel: 'Schnittplatz',         alt: 'Zwei Personen am Schnittplatz vor mehreren Monitoren, daneben ein Fenster mit Zimmerpflanzen' },
+  { img: '/images/bts/bts-loft.jpg',        hoch: false, pille: 'Dreh',      titel: 'Körperstativ im Loft', alt: 'Zwei Personen an einer Kamera auf dem Körperstativ in einem hellen Studio' },
   { img: '/images/bts/bts-studio.jpg',      hoch: false, pille: 'Dreh',      titel: 'Aufbau vor Blau',      alt: 'Studioaufbau vor blauer Wand: ein weißer Hocker, zwei Kameras auf Stativen, Softboxen und eine Tonangel über orangem Bodenband' },
-  { img: '/images/krafthaus/haus-01.jpg',   hoch: false, pille: 'Haus',      titel: 'Krafthaus am Abend',   alt: 'Das Krafthaus im Abendlicht, dahinter das Kranhaus am Rheinauhafen' },
-  { img: '/images/krafthaus/haus-03.jpg',   hoch: true,  pille: 'Haus',      titel: 'Empfang',              alt: 'Grüner Sessel vor weißer Wand, daneben ein Sideboard mit Lampe und ein Alukoffer' },
+  { img: '/images/krafthaus/haus-buero.jpg', hoch: true, pille: 'Haus',      titel: 'Büro im Krafthaus',    alt: 'Büroecke im Krafthaus: zwei grüne Sessel und ein Flipperautomat vor einem hohen Rundbogenfenster, an der Wand gerahmte Plakate' },
 
-  { img: '/images/krafthaus/haus-05.jpg',   hoch: false, pille: 'Unterwegs', titel: 'Raststätte',           alt: 'Sattelzug an einer Raststätte unter blauem Himmel' },
+  { img: '/images/krafthaus/haus-01.jpg',   hoch: false, pille: 'Haus',      titel: 'Krafthaus am Abend',   alt: 'Das Krafthaus im Abendlicht, dahinter das Kranhaus am Rheinauhafen' },
   {
     // Satz 02 — zwischen den Haus-Aufnahmen, weil er vom Ort spricht.
     text: 'ort',
