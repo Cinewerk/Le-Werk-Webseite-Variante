@@ -26,17 +26,21 @@ pnpm-debug.log*
 # Originaldateien der Bilder — bleiben lokal, gehören nicht ins Web-Repo
 /quellbilder/
 
-# Unbearbeitete Lieferungen im Bildordner.
+# Unbearbeitete Lieferungen, falls doch einmal eine in public/ landet.
 #
-# public/ wird unverändert ausgeliefert: Was hier liegt und einmal
+# public/ wird unverändert ausgeliefert: Was dort liegt und einmal
 # committet wird, steht auf der öffentlichen Seite — auch das, was nur
 # zum Aussuchen dagelegt wurde. In der Lieferung vom 6. August 2026
-# waren acht private Urlaubsbilder dabei.
+# waren acht private Urlaubsaufnahmen dabei.
 #
-# Die Webfassungen tragen die Namen der Datenliste (bts-*, haus-*) und
-# bleiben davon unberührt.
-public/images/bts/WhatsApp*
-public/images/bts/Büro_*
+# Die Lieferung selbst liegt inzwischen unter quellbilder/ und damit
+# außerhalb von public/. Diese Regeln bleiben als zweite Sperre stehen:
+# Wer das nächste Mal etwas zum Aussuchen in den Bildordner legt, kann
+# es nicht versehentlich mit veröffentlichen.
+#
+# Die Webfassungen tragen die Namen aus der Datenliste (bts-*, haus-*)
+# und bleiben davon unberührt.
+public/images/**/WhatsApp*
+public/images/**/Büro_*
 public/images/bts/bts.jpg
-public/images/bts/bts2.jpg
-public/images/bts/bts3.jpg
+public/images/bts/bts[0-9].jpg
