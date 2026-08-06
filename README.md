@@ -1,5 +1,6 @@
-# Le Werk — Webseite
+# Le Werk — Webseite (Variante)
 
-Projekt Redesign der aktuellen Le Werk Webseite
+Zweite Gestaltungsrichtung, unabhängig vom Hauptstand entwickelt.
+Gemeinsame Wurzel: [Cinewerk/Le-Werk-Webseite](https://github.com/Cinewerk/Le-Werk-Webseite)
 
-**Live:** https://cinewerk.github.io/Le-Werk-Webseite/
+**Live:** https://cinewerk.github.io/Le-Werk-Webseite-Variante/

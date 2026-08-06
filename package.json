@@ -1,12 +1,12 @@
 {
-  "name": "le-werk-webseite",
+  "name": "le-werk-webseite-variante",
   "type": "module",
   "version": "0.0.1",
-  "description": "Website des Kölner Studios Le Werk — Bewegtbild, Fotografie, Konzept, Workshops.",
+  "description": "Zweite Gestaltungsrichtung der Le-Werk-Webseite — eigenständig neben dem Hauptstand.",
   "author": "Simon Liebermann <liebermannsimon@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Cinewerk/Le-Werk-Webseite.git"
+    "url": "https://github.com/Cinewerk/Le-Werk-Webseite-Variante.git"
   },
   "private": true,
   "engines": {

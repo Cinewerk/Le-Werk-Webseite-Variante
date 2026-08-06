@@ -2,15 +2,20 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "le-werk-dev",
+      "name": "le-werk-variante",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "port": 4321
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 4322
     },
     {
       "name": "entwuerfe",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["entwuerfe/server.js"],
+      "runtimeArgs": [
+        "entwuerfe/server.js"
+      ],
       "port": 4400
     }
   ]

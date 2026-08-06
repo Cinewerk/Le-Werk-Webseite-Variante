@@ -13,5 +13,11 @@ export default defineConfig({
   // entfernen — die Pfade im Code laufen über withBase() und passen sich
   // dann von selbst an.
   site: 'https://cinewerk.github.io',
-  base: '/Le-Werk-Webseite',
+  base: '/Le-Werk-Webseite-Variante',
+
+  // Eigener Port, damit beide Fassungen nebeneinander laufen können: die
+  // Hauptseite auf 4321, diese hier auf 4322. Ohne die Angabe sucht Astro
+  // sich beim Start den nächsten freien Port — dann steht die Variante mal
+  // hier und mal dort, und man weiß nie, welche Seite man gerade ansieht.
+  server: { port: 4322 },
 });
