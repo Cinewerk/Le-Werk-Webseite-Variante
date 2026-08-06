@@ -1963,18 +1963,42 @@ const faqs = [
     container-type: inline-size;
   }
 
-  /* Der Grad hängt an der Kachelbreite und nicht am Fenster: Bei vier
-     Spalten misst die Kachel 317px bei 1440er Fenster und 211 bei 992 —
-     eine feste Größe wäre oben zu klein und unten zu groß. 5.6cqi
-     ergeben 17,8 beziehungsweise 11,8px.
+  /* DER TEXT FÜLLT DIE KACHEL. Den Grad dafür schreibt das Skript am
+     Ende der Datei: Es sucht je Kachel die größte Schrift, mit der der
+     Satz noch vollständig hineinpasst. Von Hand geht das nicht — die
+     beiden Sätze sind unterschiedlich lang (137 und 150 Zeichen), und
+     die Kachel misst je nach Fenster zwischen 217 und 435px.
 
-     Der Vorspann darf umbrechen. Im Hauptstand hält ihn ein Deckel in
-     einer Zeile; in einer Kachel dieser Breite fiele er damit auf 9,7px
-     und wäre kleiner als der Text, den er anführt. */
+     Was hier steht, ist der Wert ohne Skript: 9cqi, also neun Prozent
+     der Kachelbreite. Dann steht der Text kleiner in der Fläche, aber
+     nichts fehlt und nichts läuft über.
+
+     Blocksatz mit Silbentrennung, und beides gehört zusammen. Gemessen
+     an Satz 01, zehn Zeilen, 261px Spalte — Abstand jeder Zeile zur
+     rechten Kante in Pixeln:
+
+       linksbündig   61 · 41 · 57 · 36 · 46 · 69 · 17 · 62 · 97 · 152
+       Blocksatz      0 ·  0 ·  0 ·  0 · 46 ·  0 ·  0 ·  0 · 97 · 152
+
+     Sieben von zehn Zeilen stehen damit bündig. Die beiden übrigen
+     tragen je ein einzelnes langes Wort — "schlagkräftiges",
+     "Spezialisten" —, und eine Zeile aus einem Wort lässt sich nicht
+     spreizen. Das ist die Grenze deutscher Komposita bei 18 Zeichen je
+     Zeile, keine Einstellung.
+
+     Die Trennung allein bringt schon etwas: Ohne sie liegt die größte
+     Lücke bei 132px statt 97. Die Sprache steht am html-Element, der
+     Browser trennt also nach deutschen Regeln.
+
+     text-align-last bleibt ungesetzt: Die letzte Zeile läuft frei aus,
+     wie in jedem gesetzten Absatz. Auf volle Breite gezogen stünden ihre
+     drei Wörter als Buchstabenkette da. */
   .kulisse__satz p {
-    font-size: max(15px, 9cqi);
-    line-height: 1.3;
+    font-size: 9cqi;
+    line-height: 1.28;
     letter-spacing: -0.01em;
+    text-align: justify;
+    hyphens: auto;
     color: #fff;
   }
 
@@ -2587,5 +2611,63 @@ const faqs = [
     window.addEventListener('resize', wortBild, { passive: true });
 
     wortBild();
+  }
+</script>
+
+<script>
+  // Die Sätze in den blauen Kacheln füllen ihre Fläche aus.
+  //
+  // Gesucht ist je Kachel der größte Schriftgrad, bei dem der Satz noch
+  // vollständig hineinpasst. Das lässt sich nicht ausrechnen: Die beiden
+  // Sätze sind unterschiedlich lang, die Kachel misst je nach Fenster
+  // zwischen 217 und 435px, und wo eine Zeile umbricht, hängt an der
+  // Schrift und an der Silbentrennung.
+  //
+  // Also gemessen statt gerechnet — eine Intervallhalbierung über zwölf
+  // Schritte trifft den Grad auf ein Hundertstel Pixel genau.
+  //
+  // Der Deckel bei 44px ist kein Geschmack, sondern eine Bremse: Wird
+  // einer der Sätze einmal deutlich gekürzt, stünde er sonst als Plakat
+  // in der Kachel statt als Absatz.
+  const kacheln = document.querySelectorAll<HTMLElement>('.kulisse__satz');
+
+  if (kacheln.length) {
+    const einpassen = () => {
+      for (const kachel of kacheln) {
+        const absatz = kachel.querySelector('p');
+        if (!absatz) continue;
+
+        const stil = getComputedStyle(kachel);
+        const platz =
+          kachel.clientHeight -
+          parseFloat(stil.paddingTop) -
+          parseFloat(stil.paddingBottom);
+        if (platz <= 0) continue;
+
+        let klein = 10;
+        let gross = 44;
+        for (let i = 0; i < 12; i++) {
+          const mitte = (klein + gross) / 2;
+          absatz.style.fontSize = `${mitte}px`;
+          // offsetHeight rundet auf ganze Pixel; scrollHeight nicht, und
+          // bei einer Zeile Unterschied entscheidet genau das.
+          if (absatz.scrollHeight <= platz) klein = mitte;
+          else gross = mitte;
+        }
+        absatz.style.fontSize = `${klein.toFixed(2)}px`;
+      }
+    };
+
+    // Erst wenn Poppins steht: Mit der Ersatzschrift fällt die Messung
+    // anders aus, und der Grad wäre nach dem Schriftwechsel falsch.
+    if (document.fonts?.ready) document.fonts.ready.then(einpassen);
+    else einpassen();
+
+    let angefordertPass = 0;
+    window.addEventListener(
+      'resize',
+      () => { if (!angefordertPass) angefordertPass = requestAnimationFrame(() => { angefordertPass = 0; einpassen(); }); },
+      { passive: true }
+    );
   }
 </script>
