@@ -8,13 +8,11 @@ import { withBase } from '../lib/paths';
 // Quelltext jeder Seite, und laut Markenarchitektur wird die Schwestermarke
 // ausschließlich im Impressum genannt. Details in docs/bildmaterial.md.
 
-// Die Kundenlogos, einzeln statt als ein Streifenbild. Für die
-// Endlosschleife läuft die Liste zweimal hintereinander; der Track wandert
-// um exakt eine Listenbreite, dadurch ist der Übergang nahtlos. Das setzt
-// voraus, dass der Abstand zwischen den Logos im Logo selbst steckt — als
-// padding an .marquee__logo und nicht als gap am Track. Ein gap läge auch
-// zwischen den beiden Kopien und würde die Rechnung um genau einen Abstand
-// verschieben; die Schleife spränge sichtbar.
+// Die Kundenlogos, einzeln statt als ein Streifenbild. Sie stehen seit
+// dem 7. August 2026 als Raster unter den Arbeiten und nicht mehr als
+// laufende Leiste in einem eigenen Abschnitt — Begründung im Markup bei
+// .kundschaft. Die Liste läuft damit nur noch einmal durch; die zweite,
+// stumme Runde für den nahtlosen Umbruch der Endlosschleife ist entfallen.
 //
 // Die Größe steckt nicht in diesen Daten, sondern in einem Kasten im CSS:
 // Jedes Logo bekommt dieselbe Höchstbreite und dieselbe Höchsthöhe und
@@ -46,8 +44,9 @@ import { withBase } from '../lib/paths';
 //
 // Wo es eine deutsche Fassung gibt, steht sie hier — siemens.de leitet
 // sauber auf siemens.com/de-de.
-// Bezugskasten für die Leiste. Der Wert steht hier und in .marquee als
-// --logo-breite; das Verhältnis 2.35 verbindet beide.
+// Bezugskasten für das Raster. Der Wert steht hier und in
+// .kundschaft__raster als --logo-breite; das Verhältnis 2.35 verbindet
+// beide.
 const LOGO_VERHAELTNIS = 94 / 40;
 
 // Wie breit ein Logo im Verhältnis zur vollen Kastenbreite läuft. Breite
@@ -177,7 +176,8 @@ const kulisseRoh = [
     // Zusammensetzung des Teams spricht, und belegt dort den Platz eines
     // Hochformats.
     text: 'team',
-    vorspann: 'Erfahrung aus hunderten Produktionen:',
+    ressort: 'Team',
+    vorspann: 'Erfahrung aus hunderten Produktionen',
     satz: 'Wir kombinieren ein schlagkräftiges Kernteam mit kreativen Spezialisten aus verschiedenen Feldern.',
   },
   { img: '/images/bts/bts-regie.jpg',       hoch: false, pille: 'Dreh',      titel: 'Ansage vor dem Take',  alt: 'Zwei Männer bei der Arbeit: einer trägt die Kamera auf dem Körperstativ, der andere erklärt mit beiden Händen die nächste Einstellung' },
@@ -191,7 +191,8 @@ const kulisseRoh = [
   {
     // Satz 02 — zwischen den Haus-Aufnahmen, weil er vom Ort spricht.
     text: 'ort',
-    vorspann: 'Based in Köln, booked worldwide:',
+    ressort: 'Standort',
+    vorspann: 'Based in Köln, booked worldwide',
     satz: 'Unsere Räumlichkeiten liegen im Krafthaus, im Rheinauhafen. Gedreht wird in Köln, bundesweit oder auch international.',
   },
   { img: '/images/krafthaus/haus-06.jpg',   hoch: true,  pille: 'Haus',      titel: 'Feierabend',           alt: 'Mehrere Personen an Biertischen vor einem Lokal, eine Person lacht in die Kamera' },
@@ -200,7 +201,8 @@ const kulisseRoh = [
 
 // Die Spalte je Stück, nach derselben Regel, nach der der Browser die
 // Plätze vergibt: der Reihe nach, und was nicht mehr in die angefangene
-// Reihe passt, beginnt die nächste. Ein Textfeld belegt zwei Plätze.
+// Reihe passt, beginnt die nächste. Ein Textfeld belegt einen Platz wie
+// jede Aufnahme auch.
 //
 // Gerechnet statt eingetragen, weil der Versatz je Spalte daran hängt —
 // eine eingetragene Spaltenzahl wäre nach der ersten Umsortierung falsch,
@@ -413,7 +415,7 @@ const faqs = [
           <a class="werk__link" href={withBase(`/arbeiten/${a.slug}`)} data-zeiger="View">
             <img src={withBase(a.bild)} alt={a.alt} width={a.breite} height={a.hoehe} loading="lazy" decoding="async" />
             <span class="werk__zeile">
-              <span class={`werk__pille${a.art === 'Foto' ? ' werk__pille--blau' : ''}`}>{a.art}</span>
+              <span class="werk__pille">{a.art}</span>
               <!-- Die Ansage steht einmal vor der Klammer, nicht an jedem
                    Wert: "Formate 9:16 · 16:9" statt zweimal "Format". Der
                    Plural richtet sich nach der Anzahl. -->
@@ -430,60 +432,49 @@ const faqs = [
         </article>
       ))}
     </div>
-  </section>
 
-  <!-- ═══ 4 · TRUSTBAR (Logo-Marquee) ════════════════════════════════════ -->
-  <section class="section section--tight trust" id="trust" aria-label="Auswahl unserer Kunden">
-    <div class="container container--breit">
-      <!-- Vorher "Vertrauen auf Le Werk" — als Imperativ lesbar und
-           werblich. Die Zeile benennt jetzt nur noch, was zu sehen ist. -->
-      <p class="label trust__label">Ausgewählte Kunden</p>
-    </div>
+    <!-- Die Kundenliste schließt das Kapitel ab. Sie stand bis zum
+         7. August 2026 als eigener Abschnitt darunter — eine Leiste
+         zwischen zwei Haarlinien, in der zwölf Logos endlos nach links
+         liefen. Zwei Gründe, warum sie so nicht mehr passt:
 
-    <div class="marquee">
-      <!-- Die Liste steht zweimal im Markup. Die zweite Runde trägt
-           aria-hidden und leere Alternativtexte: Sie ist nur da, damit die
-           Schleife ohne Lücke umbrechen kann, und würde sonst jeden
-           Kundennamen doppelt vorlesen lassen.
+         Die Leiste war die dritte Stelle mit derselben Geste. Der Akzent,
+         der beim Überfahren von links durchläuft, trägt inzwischen die
+         Services und die FAQ; an einem Logoband, das gar nichts aufklappt,
+         versprach er etwas, das er nicht einlöst.
 
-           tabindex="-1" gehört zwingend dazu: Ein Element mit aria-hidden
-           darf nicht fokussierbar sein, sonst landet die Tabulatortaste in
-           etwas, das für Screenreader nicht existiert. Ohne die Angabe
-           stünden zehn stumme Links in der Tabreihenfolge. -->
-      <ul class="marquee__track">
-        {[...kunden, ...kunden].map((k, i) => {
-          const kopie = i >= kunden.length;
-          return (
-            <li class="marquee__logo" aria-hidden={kopie ? 'true' : undefined}>
-              <a
-                class="marquee__link"
-                href={k.url}
-                target="_blank"
-                rel="noopener"
-                tabindex={kopie ? -1 : undefined}
-              >
-                <!-- eager statt lazy: Die Leiste läuft, sobald sie ins Bild
-                     kommt, und ein nachgeladenes Logo hinterlässt bis dahin
-                     eine Lücke. Zwölf Dateien sind zusammen 124 KB, die
-                     zweite Runde kommt aus dem Zwischenspeicher.
-                     fetchpriority low, damit sie sich nicht vor das
-                     Bühnenvideo und die ersten Kacheln drängen. -->
-                <img
-                  src={withBase(`/images/kunden/${k.datei}.png`)}
-                  alt={kopie ? '' : k.name}
-                  width={k.b} height={k.h}
-                  loading="eager" fetchpriority="low" decoding="async"
-                  style={`--b: ${logoBreite(k)}`}
-                />
-              </a>
-            </li>
-          );
-        })}
+         Und sie lief. Auf einer Seite, deren einzige waagerechte Bewegung
+         das klebende Kapitelwort ist, war eine Endlosschleife der einzige
+         Punkt, an dem sich etwas von allein bewegte.
+
+         Jetzt steht die Liste da, wo sie hingehört: unter den sechs
+         Arbeiten, im selben Kapitel. Die Kacheln zeigen sechs Projekte,
+         die Zeilen darunter nennen, für wen sonst noch. Das ist keine
+         eigene Behauptung mehr, sondern die Fußnote zu den Arbeiten —
+         deshalb kein Abschnitt, keine Überschrift und keine Fläche,
+         sondern nur eine Marginalie und ein Raster aus Zeilen. -->
+    <div class="kundschaft">
+      <p class="label kundschaft__label">Ausgewählte Kunden</p>
+
+      <ul class="kundschaft__raster">
+        {kunden.map((k) => (
+          <li class="kundschaft__feld">
+            <a class="kundschaft__link" href={k.url} target="_blank" rel="noopener">
+              <img
+                src={withBase(`/images/kunden/${k.datei}.png`)}
+                alt={k.name}
+                width={k.b} height={k.h}
+                loading="lazy" decoding="async"
+                style={`--b: ${logoBreite(k)}`}
+              />
+            </a>
+          </li>
+        ))}
       </ul>
     </div>
   </section>
 
-  <!-- ═══ 5 · SERVICES ═══════════════════════════════════════════════════ -->
+  <!-- ═══ 4 · SERVICES ═══════════════════════════════════════════════════ -->
   <section class="section section--sand services" aria-labelledby="services-title">
     <div class="container container--breit">
       <!-- Marginalienstil wie bei "Warum Le Werk", nicht die große
@@ -537,7 +528,7 @@ const faqs = [
     </div>
   </section>
 
-  <!-- ═══ 6 · STUDIO ═════════════════════════════════════════════════════ -->
+  <!-- ═══ 5 · STUDIO ═════════════════════════════════════════════════════ -->
   <section class="section section--dark team" aria-labelledby="team-title">
     <!-- "Studio" klebt und wandert über die Gesichter und die Kulisse,
          genau wie "Featured Work" über die Arbeiten. Beide Abschnitte
@@ -584,10 +575,14 @@ const faqs = [
         {kulisse.map((k) => (
           k.text ? (
             <li class="kulisse__satz" data-spalte={k.spalte}>
-              <p>
-                <strong>{k.vorspann}</strong>{' '}
-                {k.satz}
-              </p>
+              <!-- Der Satz steht als Zeitungsspalte: Ressortzeile,
+                   Schlagzeile, Fließtext mit Initial. Warum so und woher
+                   die einzelnen Teile kommen, steht bei .notiz im CSS. -->
+              <article class="notiz">
+                <p class="notiz__ressort">{k.ressort}</p>
+                <h3 class="notiz__titel">{k.vorspann}</h3>
+                <p class="notiz__text">{k.satz}</p>
+              </article>
             </li>
           ) : (
             <li class="kulisse__stueck" data-spalte={k.spalte} style={`--r: ${k.hoch ? '3 / 4' : '4 / 3'}`}>
@@ -603,7 +598,7 @@ const faqs = [
       </ul>
   </section>
 
-  <!-- ═══ 7 · DREI GRÜNDE ════════════════════════════════════════════════ -->
+  <!-- ═══ 6 · DREI GRÜNDE ════════════════════════════════════════════════ -->
   <section class="section benefits" aria-labelledby="benefits-title">
     <div class="container container--breit">
       <!-- Ohne große Überschrift: "Drei Gründe, uns anzurufen" ist
@@ -648,7 +643,7 @@ const faqs = [
     </div>
   </section>
 
-  <!-- ═══ 8 · FAQ ═══════════════════════════════════════════════════════ -->
+  <!-- ═══ 7 · FAQ ═══════════════════════════════════════════════════════ -->
   <!-- Die offenen Fragen zuerst, der Aufruf danach: Wer bis hierher gelesen
        hat, soll nicht mit einer Frage im Kopf auf den Knopf schauen.
 
@@ -676,7 +671,7 @@ const faqs = [
     </div>
   </section>
 
-  <!-- ═══ 9 · BOTTOM-CTA ════════════════════════════════════════════════ -->
+  <!-- ═══ 8 · BOTTOM-CTA ════════════════════════════════════════════════ -->
   <!-- Der Aufruf schließt die Seite ab und geht in die Fußzeile über. Beide
        sind dunkel, aber nicht gleich: Die Fußzeile liegt auf
        --petrol-deeper und setzt sich damit ab. -->
@@ -895,172 +890,6 @@ const faqs = [
     to   { opacity: 1; }
   }
 
-  /* ── 2 · Trustbar ─────────────────────────────────────────────────────── */
-  .trust__label { margin-bottom: 0; }
-
-  /* Die Leiste steht als Band zwischen zwei Haarlinien, und beim
-     Überfahren läuft der Akzent von links durch — übernommen aus
-     Entwurf 04c-XII, dieselbe Geste wie an den FAQ-Zeilen weiter unten.
-
-     Das Band liegt über die volle Fensterbreite und nicht im Rand: Der
-     Sweep soll die Seite queren, nicht in einer Spalte enden.
-
-     ::before und nicht ein Hintergrund mit Übergang: Eine Fläche, die
-     von null auf volle Breite wächst, läuft sichtbar durch. Ein
-     Farbwechsel blendete nur um. */
-  .trust .marquee {
-    margin-top: clamp(1.5rem, 3vw, 2.5rem);
-    position: relative;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    padding-block: clamp(1.1rem, 2.5vw, 1.8rem);
-  }
-
-  .trust .marquee::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    width: 0;
-    background: var(--akzent);
-    transition: width 350ms var(--ease-out);
-  }
-
-  .trust .marquee:hover::before,
-  .trust .marquee:focus-within::before { width: 100%; }
-
-  /* Die Logos liegen über dem Sweep — sonst deckte er sie zu. */
-  .trust .marquee__track { position: relative; }
-
-  /* Auf dem Blau bleiben die Logos weiß und gehen auf volle Deckung:
-     Weiß auf #2451D8 steht bei 6.47:1, die 72 Prozent Deckung der
-     Ruhelage kämen dort nur auf 3.9. */
-  .trust .marquee:hover .marquee__logo img { opacity: 1; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .trust .marquee::before { transition: none; }
-  }
-
-  .marquee {
-    /* Die volle Kastenbreite. Alles andere in der Leiste hängt daran: die
-       Logobreite über den Faktor --b je Marke, die Kastenhöhe über das
-       Verhältnis 2.35. Beide Werte stehen auch im Frontmatter, dort als
-       LOGO_VERHAELTNIS. */
-    --logo-breite: clamp(3.7rem, 5.85vw, 5.25rem);
-    position: relative;
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  }
-
-  .marquee__track {
-    display: flex;
-    align-items: center;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    /* muss 0 bleiben: Der Track wandert um 50 % seiner Breite. Ein gap läge
-       auch zwischen den beiden Kopien und verschöbe die Rechnung um genau
-       einen Abstand — die Schleife spränge sichtbar. Der Abstand steckt
-       deshalb im Logo, siehe .marquee__logo. */
-    gap: 0;
-    width: max-content;
-    /* Der frühere Streifen lief 1600px in 40s, also 40px in der Sekunde.
-       Bei zwölf Logos misst eine Runde 1329px — bei gleicher
-       Geschwindigkeit sind das 33s. Wer ein Logo ergänzt, muss den Wert
-       nachziehen, sonst läuft die Leiste schneller. */
-    animation: marquee 33s linear infinite;
-    will-change: transform;
-  }
-
-  .marquee:hover .marquee__track,
-  .marquee:focus-within .marquee__track { animation-play-state: paused; }
-
-  @keyframes marquee {
-    from { transform: translate3d(0, 0, 0); }
-    to   { transform: translate3d(-50%, 0, 0); }
-  }
-
-  /* Die Kachel ist so breit wie ihr Logo plus zweimal Polsterung — keine
-     feste Breite. Damit steht zwischen zwei Logos immer derselbe Abstand
-     von 37px.
-
-     Mit fester Breite war das nicht so. Ein schmales Logo saß dann mittig
-     in einem 94px breiten Kasten und brachte bis zu 55px Leerraum mit, der
-     sich zur Lücke addierte — gemessen lagen die sichtbaren Abstände
-     zwischen 38px (Siemens neben Street One) und 87px (EA neben Formel D).
-     Zwei Wortmarken standen doppelt so eng wie zwei Bildmarken.
-
-     Die Größe selbst kommt aus --logo-breite an .marquee und war zuerst
-     deutlich zu groß: Bei einem Kasten von 148 x 54 kamen die Wortmarken
-     auf 111px, und vier Bildmarken standen auf voller Höhe, wo der frühere
-     Streifen nur eine hatte. Über 142 x 44 und 132 x 40 steht sie jetzt bei
-     84 x 36 — Siemens läuft damit 84px breit gegen 80px im alten
-     Streifen. */
-  .marquee__logo {
-    flex: none;
-    display: flex;
-    padding-inline: clamp(0.75rem, 1.3vw, 1.1875rem);
-  }
-
-  /* Der Link ist der Kasten. Seine Höhe ist fest und nicht vom Bild
-     abgeleitet — das ist keine Kosmetik, sondern Bedingung dafür, dass die
-     Logos überhaupt erscheinen:
-
-     Ein Bild mit loading="lazy" wird geladen, sobald sein Kasten in die
-     Nähe des Sichtfelds kommt. Stehen aber Breite und Höhe des Bildes auf
-     auto, hat es vor dem Laden keine Größe — und was keine Größe hat,
-     kommt nie in die Nähe des Sichtfelds. Das Bild lädt nicht, bleibt
-     ohne Größe, und die Leiste ist leer. Genau das ist hier passiert.
-
-     Mit fester Kastenhöhe steht die Fläche von Anfang an, das Laden löst
-     aus, und object-fit hält das Seitenverhältnis.
-
-     Dass der Link die Fläche trägt und nicht das Bild, hat noch einen
-     Grund: Ein Ziel von 104 x 44px ist knapp, und die Leiste bewegt sich.
-     Deshalb hält sie beim Überfahren an, siehe .marquee__track. */
-  .marquee__link {
-    display: flex;
-    align-items: center;
-    height: calc(var(--logo-breite) / 2.35);
-  }
-
-  /* Die Trustbar liegt auf Weiß, deshalb Petrol und nicht currentColor —
-     der Ring soll sich vom schwarzen Logo unterscheiden. */
-  .marquee__link:focus-visible {
-    outline: 2px solid var(--petrol);
-    outline-offset: 6px;
-    border-radius: 2px;
-  }
-
-  /* Die Breite kommt je Marke aus --b, die Höhe folgt dem
-     Seitenverhältnis. Breite Wortmarken bekommen die volle Kastenbreite,
-     hohe Bildmarken so viel, wie ihre Höhe zulässt — auf gleiche Höhe
-     gebracht wären die Wortmarken dreimal so schwer.
-
-     Die feste Breite ist Bedingung, nicht Kosmetik: Stehen Breite und Höhe
-     beide auf auto, hat ein Bild mit loading="lazy" vor dem Laden keine
-     Größe, kommt damit nie in die Nähe des Sichtfelds und lädt nie. Die
-     Leiste bleibt leer. Mit fester Breite steht die Fläche von Anfang an —
-     das Seitenverhältnis liefern die width- und height-Attribute.
-
-     Kein Farbfilter: Die Logos sind schwarz, weil die Dateien schwarz sind.
-     Formel D kam türkis und wurde umgefärbt — nachgemessen liegt die
-     Deckfarbe jetzt bei allen zehn zwischen 0 und 32 von 255. Details in
-     docs/bildmaterial.md. */
-  .marquee__logo img {
-    width: calc(var(--b, 1) * var(--logo-breite));
-    height: auto;
-    opacity: 0.72;
-    transition: opacity var(--dur) var(--ease-out);
-  }
-
-  /* Beim Überfahren der Leiste heben sich alle Logos, das einzelne unter
-     dem Zeiger geht auf volle Deckung — sonst wäre nicht zu sehen, worauf
-     der Klick geht. */
-  .marquee:hover .marquee__logo img { opacity: 0.85; }
-  .marquee__link:hover img,
-  .marquee__link:focus-visible img { opacity: 1; }
-
   /* ── 2 · Positionierung ───────────────────────────────────────────────── */
   .statement { padding-block: clamp(4.5rem, 10vw, 8.5rem); }
 
@@ -1104,87 +933,39 @@ const faqs = [
     letter-spacing: 0;
   }
 
-  /* Was am Ende steht, ist die Leistung — und die soll man sehen. Zwei
-     Stufen statt einer, weil "vor allem das Social" gilt:
+  /* Die Leistung am Satzende — die Stelle, an der der Absatz sagt, was
+     Le Werk macht. Sie trägt jetzt nur noch Gewicht.
 
-       Social                800   so schwer wie die Wortmarke
-       und Branded Content   600   eine Stufe über dem Absatz (500)
+     DER STRICH IST WEG. Er stand hier zwei Anläufe lang: ein geschwungener
+     Federstrich in Bernstein, als SVG im Hintergrund, der beim Scrollen von
+     links heranwuchs. Seine Form und die Rechnung dazu stehen in der
+     Git-Historie (Stand 50bfbfc). Dafür geht die Phrase eine Stufe hoch:
 
-     Poppins liegt hier in 400, 500, 600 und 800 vor; 700 gibt es nicht
-     und würde vom Browser verzerrt gerechnet. Die 600 sind deshalb der
-     einzige Zwischenschritt, den es gibt — und er reicht: Der Absatz
-     läuft in 500, der Unterschied ist auf 46px gut zu sehen.
+       vorher   600 für die Phrase, 800 für "Social"
+       jetzt    800 für beides
 
-     Kein dritter Farbwert und keine Linie. Der Absatz trägt schon zwei
-     Auszeichnungen — die Wortmarke in ExtraBold und die drei Disziplinen
-     in kursiver Bodoni. Eine dritte Art zu markieren machte aus dem Satz
-     eine Musterkarte. */
-  /* Die Leistung am Satzende: fett gesetzt und beim Scrollen von Hand
-     unterstrichen.
+     800 IST HIER DIE DECKE. Poppins liegt lokal in 400, 500, 600 und 800
+     vor (src/styles/fonts/) — 900 gibt es bei Poppins, sie ist nur nicht
+     eingebunden. "Social" kann also nicht weiter vor die übrige Phrase
+     treten; wer das will, braucht eine weitere Schriftdatei.
 
-     DER STRICH IST EIN BILD, KEIN text-decoration. Er ist geschwungen,
-     läuft rechts spitz aus und liegt tiefer als eine Grundlinie — das
-     kann keine Unterstreichung. Er steckt als SVG im Hintergrund.
+     Der Absatz selbst läuft in 500. Drei Stufen Unterschied auf 46px sind
+     deutlich zu sehen, und die Phrase ist damit das Schwerste im Absatz —
+     zusammen mit der Wortmarke, die dasselbe Gewicht trägt. */
+  .statement__leistung { font-weight: 800; }
 
-     WARUM HINTERGRUND UND NICHT EIN ::after-KASTEN. Die Phrase steht nur
-     bei 1440px auf einer Zeile; darunter bricht sie in zwei bis vier
-     Stücke um (bei 375px in vier). Ein absolut gesetzter Kasten kennt
-     nur das erste Stück und liefe quer über den Absatz. Ein Hintergrund
-     mit box-decoration-break: clone bekommt dagegen jedes Zeilenstück
-     einzeln — jede Zeile der Phrase trägt ihren eigenen Strich, so wie
-     man es von Hand auch machen würde.
-
-     DAS WACHSEN übernimmt background-size: Die Breite läuft von null auf
-     die volle Zeilenbreite. Ein harter Beschnitt wäre falsch — dann
-     stünde während des Zeichnens eine abgeschnittene Kante im Bild.
-     Beim Wachsen läuft die Spitze voraus, genau wie ein Stift.
-
-     preserveAspectRatio: none ist dafür Bedingung: Ohne die Angabe hielte
-     das SVG sein Seitenverhältnis und wüchse in der Höhe mit.
-
-     DIE FORM ist in fünf Anläufen entstanden und jedes Mal als Bild
-     geprüft, weil eine Pfadangabe im Kopf nichts hergibt. Was die
-     ersten vier falsch machten:
-
-       zu dünn      Der Strich füllte ein Viertel seines Kastens und las
-                    sich als Linie. Jetzt füllt er drei Viertel.
-       zu gleich    Oben und unten fast parallel — das ist ein Lineal,
-                    kein Stift. Jetzt läuft er dünn an, wird zur Mitte
-                    hin dick und flickt rechts spitz aus.
-       zu waagrecht Er steigt jetzt nach rechts, wie ein Strich, den man
-                    im Vorbeigehen zieht.
-       zu weit weg  Er saß eine Vierteleinheit unter dem Text; jetzt
-                    beginnt die Farbe knapp unter der Grundlinie.
-
-     Bei kurzen Zeilenstücken wird der Strich mitgestaucht und dadurch
-     runder — das ist keine Schwäche, sondern das, was ein kurzer
-     Federstrich auch tut.
-
-     Die Farbe steht im SVG und nicht als Variable — ein Bild in einer
-     data-URL kann keine CSS-Werte lesen. Wer sie ändert, ändert sie
-     dort: %23FFB300 ist --marke. */
-  .statement__leistung {
-    font-weight: 600;
-    /* Der Abstand macht dem Strich Platz und verschiebt nichts: Polsterung
-       an einem Element im Textfluss ändert die Zeilenhöhe nicht. */
-    padding-bottom: 0.3em;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 26' preserveAspectRatio='none'%3E%3Cpath d='M0,12.4 C10,8.2 28,5.8 56,4.6 C110,2.4 172,3.2 226,2.2 C260,1.6 282,1 300,0 C293,2.2 284,4.6 270,7.2 C248,11.2 218,15 180,17.8 C148,20.2 112,21.8 78,22.8 C58,23.4 34,23.8 16,23 C8,22.6 3,21.4 0,19.6 Z' fill='%23FFB300'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: left bottom;
-    background-size: calc(var(--auf, 1) * 100%) 0.42em;
-    -webkit-box-decoration-break: clone;
-    box-decoration-break: clone;
-  }
-
-  /* "Social" trägt eine Stufe mehr — die Phrase steht auf 600, das Wort
-     auf 800, der Absatz auf 500. Poppins liegt hier in 400, 500, 600 und
-     800 vor; 700 gibt es nicht und würde vom Browser verzerrt gerechnet. */
+  /* Ohne Wirkung, solange 800 die schwerste eingebundene Poppins ist —
+     bolder von 800 aus wählt der Browser ohnehin wieder 800. Die
+     Auszeichnung bleibt trotzdem im Markup: Sie ist die Aussage "vor
+     allem das Social", eine Sprachausgabe betont sie, und käme je eine
+     900 dazu, greift die Regel von selbst. */
   .statement__leistung strong { font-weight: 800; }
 
   /* Die Phrase färbt sich stufenlos auf, statt wie die übrigen Wörter in
-     einem Schritt umzuspringen — sie läuft mit dem Strich mit. Beide
-     Wähler, weil das Skript den Wörtern unterwegs .is-an anhängt und
-     dessen Regel sonst gewinnt. */
+     einem Schritt umzuspringen. Den Grad dafür schreibt das Skript am Ende
+     der Datei als --auf; seit der Strich weg ist, ist die Farbe das
+     Einzige, was daran hängt. Beide Wähler, weil das Skript den Wörtern
+     unterwegs .is-an anhängt und dessen Regel sonst gewinnt. */
   .statement__leistung :global(.wort),
   .statement__leistung :global(.wort.is-an) {
     color: color-mix(in srgb, var(--akzent) calc(20% + 80% * var(--auf, 1)), transparent);
@@ -1236,7 +1017,6 @@ const faqs = [
      .section davor, weil .section--sand sonst gleichrangig wäre und die
      Reihenfolge im Bündel entschiede. */
   .section.work,
-  .section.trust,
   .section.services,
   .section.team,
   .section.benefits,
@@ -1267,33 +1047,27 @@ const faqs = [
   /* Petrol als Fokusfarbe ist auf Schwarz nicht mehr zu sehen (1.6:1) —
      im schwarzen Teil zeichnet Weiß den Ring. */
   .section.work :focus-visible,
-  .section.trust :focus-visible,
   .section.services :focus-visible,
   .section.team :focus-visible,
   .section.benefits :focus-visible,
   .section.faq :focus-visible,
   .section.cta :focus-visible { outline-color: #fff; }
 
-  /* Die Logodateien sind schwarz — auf Schwarz kehrt der Filter sie auf
-     Weiß um; die Deckungsstufen der Leiste bleiben unverändert. */
-  .trust .marquee__logo img { filter: invert(1); }
-
-  /* "Projekt anfragen" trägt den Akzent als Fläche. Weiß darauf steht bei
-     6.47:1 — der einzige Ort, an dem das Blau eine Fläche ist und nicht
-     eine Linie oder eine Ziffer, und deshalb der Ort, an dem es am
-     meisten trägt.
+  /* "Projekt anfragen" trägt Bernstein als Fläche — der einzige Knopf der
+     Seite, und damit genau das, wofür die Farbe hier steht: das, was man
+     anfassen kann. Schwarz darauf steht bei 10.83:1.
 
      Der Hover dunkelt die Fläche ab statt sie zu wechseln: dieselbe
-     Farbe, 20 Prozent Schwarz darin. Weiß steht darauf bei 8.7:1. */
+     Farbe, 18 Prozent Schwarz darin. Schwarz steht darauf bei 8.6:1. */
   .cta .btn--on-dark {
-    background: var(--akzent);
-    color: #fff;
-    border-color: var(--akzent);
+    background: var(--marke);
+    color: #0d0d0d;
+    border-color: var(--marke);
   }
 
   .cta .btn--on-dark:hover {
-    background: color-mix(in srgb, var(--akzent) 80%, #000);
-    color: #fff;
+    background: color-mix(in srgb, var(--marke) 82%, #000);
+    color: #0d0d0d;
   }
 
   /* Der Footer liegt eine Stufe tiefer als die Abschnitte — dieselbe
@@ -1480,22 +1254,37 @@ const faqs = [
     line-height: 1.5;
   }
 
+  /* Alle Pillen gleich: eine Kontur in der Textfarbe. Die beiden
+     Fotostrecken trugen hier eine blau gefüllte Pille und waren damit als
+     Ausnahme markiert — die Gattung steht aber ohnehin lesbar darin, die
+     Füllung hat nur eine zweite Aussage darüber gelegt. */
   .werk__pille {
     padding: 2px 10px;
     border: 1px solid currentColor;
     border-radius: 999px;
     letter-spacing: 0.04em;
     white-space: nowrap;
+    transition: background-color 250ms var(--ease-out),
+                border-color 250ms var(--ease-out),
+                color 250ms var(--ease-out);
   }
 
-  /* Die beiden Fotostrecken tragen die gefüllte Pille — sie sind die
-     Ausnahme unter sechs Projekten, und die Farbe ist dieselbe wie im
-     Positionsabsatz oben. Vier gefüllte Pillen für Video wären keine
-     Auszeichnung mehr, sondern der Normalfall. */
-  .werk__pille--blau {
-    background: var(--akzent);
-    border-color: var(--akzent);
-    color: #fff;
+  /* Die Pille selbst ist das Ziel, nicht die Kachel: Sie färbt sich nur,
+     wenn der Zeiger wirklich auf ihr steht. Über der Kachel zu sein
+     genügt nicht — sonst leuchtete sie schon auf, während man das Bild
+     ansieht.
+
+     Schwarz auf Bernstein und nicht Weiß: #0d0d0d steht auf #FFB300 bei
+     10.83:1, Weiß nur bei 1.79 — auf dem hellen Gelb wäre die
+     Beschriftung schlicht weg. */
+  .werk__pille:hover {
+    background: var(--marke);
+    border-color: var(--marke);
+    color: #0d0d0d;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .werk__pille { transition: none; }
   }
 
   .werk__formate {
@@ -1542,6 +1331,126 @@ const faqs = [
 
     .werk:nth-child(3n + 2),
     .werk:nth-child(3n) { --rutsch: 0; }
+  }
+
+  /* ── Die Kundschaft ───────────────────────────────────────────────────── */
+  /* Zwölf Logos als Feld unter den sechs Arbeiten, jedes in einem großen
+     Kasten, der sich beim Überfahren mit Bernstein füllt.
+
+     DIE GESTE IST DIE DER SEITE. Services und FAQ füllen sich beim
+     Überfahren von links mit derselben Farbe, und dasselbe passiert hier —
+     nur waagerecht in einem Kasten statt in einer Zeile. Damit ist die
+     Kundschaft kein Fremdkörper mehr, sondern die dritte Stelle, an der
+     Bernstein sagt: Hier kann man hinfassen. Jedes Logo führt auf die
+     Seite des Unternehmens, das Versprechen wird also eingelöst.
+
+     UND SIE NUTZT AUS, DASS DIE DATEIEN SCHWARZ SIND. Auf dem schwarzen
+     Grund kehrt ein Filter sie auf Weiß um; läuft der Bernstein darunter,
+     wird der Filter zurückgenommen und die Marke steht wieder schwarz da —
+     bei 10.83:1. Kein zweites Bild, kein Umfärben, nur der Filter aus.
+
+     GROSS UND NICHT KLEIN. Zuvor standen die Logos in sechs Spalten, auf
+     zwei Dritteln Deckung, als Fußnote. Auf einer Seite, deren
+     Kapitelwörter 154px hoch sind, war das der einzige Ort, der geflüstert
+     hat. Vier Spalten statt sechs, volle Deckung, und der Kasten hat Luft:
+     Die Marken stehen jetzt so groß da wie alles andere hier auch.
+
+     ZWEI LINIEN, NICHT ZWÖLF. Das Feld ist oben und unten von einer
+     Haarlinie eingefasst, dazwischen steht keine — die Kästen zeigen sich
+     erst, wenn man sie anfasst. */
+  .kundschaft { margin-top: clamp(4rem, 8vw, 7rem); }
+
+  .kundschaft__label { margin-bottom: var(--space-3); }
+
+  .kundschaft__raster {
+    /* Der Kasten, in dem ein Logo steht. Die Breite je Marke hängt als
+       Faktor --b daran; er wird im Frontmatter aus den Maßen der Datei
+       gerechnet: Breite Wortmarken bekommen die volle Kastenbreite, hohe
+       Bildmarken so viel, wie ihre Höhe zulässt. Auf gleiche Höhe
+       gebracht wären die Wortmarken dreimal so schwer wie die
+       Bildmarken.
+
+       FESTE SPALTENZAHL, kein auto-fill: Zwölf gehen glatt in vier, drei
+       und zwei auf; mit auto-fill stünde je nach Fensterbreite eine Reihe
+       mit einer einzelnen Marke da. */
+    --logo-breite: clamp(5.5rem, 11.5vw, 10.5rem);
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-block: 1px solid var(--line);
+  }
+
+  .kundschaft__feld {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+
+  .kundschaft__feld::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 0;
+    background: var(--marke);
+    transition: width 350ms var(--ease-out);
+  }
+
+  .kundschaft__feld:hover::before,
+  .kundschaft__feld:focus-within::before { width: 100%; }
+
+  /* Die Höhe des Bildkastens steht fest und kommt nicht vom Bild. Das ist
+     keine Kosmetik, sondern die Bedingung dafür, dass die Logos überhaupt
+     erscheinen: Ein Bild mit loading="lazy" wird geladen, sobald sein
+     Kasten in die Nähe des Sichtfelds kommt. Stehen Breite und Höhe auf
+     auto, hat es vor dem Laden keine Größe — und was keine Größe hat,
+     kommt nie in die Nähe des Sichtfelds. Genau das ist an der früheren
+     Leiste einmal passiert, sie blieb leer.
+
+     position: relative hebt den Link über die Fläche; ohne das deckte sie
+     ihn zu. */
+  .kundschaft__link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: calc(var(--logo-breite) / 2.35);
+    /* Waagerecht dieselbe Polsterung wie an den Dienstzeilen: Dort rückt
+       der Inhalt um bis zu 20px von der Kante ein, die Fläche läuft aber
+       bis an sie heran. Damit stehen die Logos auf derselben Kante wie
+       die Ziffern der Services darunter. */
+    padding: clamp(1.25rem, 2.6vw, 2.25rem) clamp(10px, 1.5vw, 20px);
+    box-sizing: content-box;
+  }
+
+  .kundschaft__link:focus-visible { outline-offset: -6px; }
+
+  /* invert(0) und nicht none als Zielwert: Zwischen zwei Filtern derselben
+     Art rechnet der Browser weich durch, von einem Filter auf none
+     springt er. */
+  .kundschaft__link img {
+    width: calc(var(--b, 1) * var(--logo-breite));
+    height: auto;
+    filter: invert(1);
+    transition: filter 300ms var(--ease-out);
+  }
+
+  .kundschaft__feld:hover img,
+  .kundschaft__feld:focus-within img { filter: invert(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kundschaft__feld::before,
+    .kundschaft__link img { transition: none; }
+  }
+
+  @media (max-width: 859.98px) {
+    .kundschaft__raster { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 559.98px) {
+    .kundschaft__raster { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
   /* ── Die Kapitelwörter ──────────────────────────────────────────────── */
@@ -1611,12 +1520,22 @@ const faqs = [
 
   .dienst:first-child { border-top: 1px solid var(--line); }
 
+  /* DIE FLÄCHE IST BERNSTEIN, NICHT BLAU. Damit trennt die Seite zwei
+     Rollen sauber: Blau gehört dem, was man liest — der Positionsabsatz
+     oben —, Bernstein dem, was man anfassen kann. Das sind die Pillen an
+     den Kacheln, diese Zeilen hier und die FAQ. Wer über eine Zeile fährt,
+     bekommt immer dieselbe Farbe zurück.
+
+     Der Wechsel dreht die Zeile um: Auf #FFB300 steht Weiß bei 1.79:1 und
+     wäre praktisch weg, #0d0d0d steht bei 10.83. Ziffer, Name, Text und
+     Pfeil gehen deshalb beim Überfahren auf Schwarz — die Zeile liest sich
+     dann wie mit dem Textmarker gezogen. */
   .dienst::before {
     content: '';
     position: absolute;
     inset: 0;
     width: 0;
-    background: var(--akzent);
+    background: var(--marke);
     transition: width 350ms var(--ease-out);
   }
 
@@ -1636,7 +1555,7 @@ const faqs = [
     transition: color 350ms var(--ease-out);
   }
 
-  .dienst:hover .dienst__nr { color: #fff; }
+  .dienst:hover .dienst__nr { color: #0d0d0d; }
 
   .dienst__name {
     font-family: var(--font-ui);
@@ -1646,7 +1565,10 @@ const faqs = [
     letter-spacing: var(--track-display);
     text-transform: uppercase;
     color: #fff;
+    transition: color 350ms var(--ease-out);
   }
+
+  .dienst:hover .dienst__name { color: #0d0d0d; }
 
   /* 0fr auf 1fr statt max-height: Damit läuft die Bewegung genau bis zur
      tatsächlichen Texthöhe, ohne dass irgendwo ein Maximalwert gepflegt
@@ -1659,6 +1581,9 @@ const faqs = [
                 margin-top 500ms var(--ease-out);
   }
 
+  /* Weiß ist der Wert ohne Zeigegerät (siehe hover: none weiter unten) —
+     dort steht der Text auf Schwarz. Mit Zeigegerät erscheint er nur auf
+     der bernsteinfarbenen Fläche und geht dort auf Schwarz. */
   .dienst__text p {
     overflow: hidden;
     max-width: 56ch;
@@ -1671,14 +1596,18 @@ const faqs = [
   }
 
   .dienst:hover .dienst__text { grid-template-rows: 1fr; margin-top: 0.8em; }
-  .dienst:hover .dienst__text p { opacity: 1; transform: none; }
+  .dienst:hover .dienst__text p {
+    opacity: 1;
+    transform: none;
+    color: rgba(13, 13, 13, 0.86);
+  }
 
-  /* Der Pfeil kommt von links herein. In Weiß und nicht im Akzent: Er
-     erscheint nur auf dem Akzent, und dort wäre er unsichtbar. */
+  /* Der Pfeil kommt von links herein. Er erscheint nur auf der Fläche und
+     nimmt deshalb deren Gegenfarbe an: Schwarz auf Bernstein. */
   .dienst__pfeil {
     align-self: center;
     font-size: clamp(20px, 2.4vw, 30px);
-    color: #fff;
+    color: #0d0d0d;
     opacity: 0;
     transform: translateX(-12px);
     transition: opacity 300ms linear, transform 350ms var(--ease-out);
@@ -1698,6 +1627,7 @@ const faqs = [
   @media (prefers-reduced-motion: reduce) {
     .dienst,
     .dienst::before,
+    .dienst__name,
     .dienst__nr { transition: none; }
   }
 
@@ -1717,12 +1647,16 @@ const faqs = [
 
   .benefit { border-top: 1px solid var(--line); padding-top: var(--space-3); }
 
+  /* Die drei Ziffern in Bernstein. Vorher stand hier --petrol, im
+     Schwarzabschnitt also das helle Blau — sie waren damit die letzte
+     blaue Auszeichnung unterhalb des Positionsabsatzes. Auf #0d0d0d
+     stehen sie bei 10.83:1 statt bei 3.22. */
   .benefit__num {
     display: block;
     font-family: var(--font-editorial);
     font-style: italic;
     font-size: 1.25rem;
-    color: var(--petrol);
+    color: var(--marke);
     margin-bottom: var(--space-2);
   }
 
@@ -2050,69 +1984,170 @@ const faqs = [
     text-transform: uppercase;
   }
 
-  /* DAS TEXTFELD IST EINE KACHEL, kein Absatz zwischen Kacheln: Es
-     belegt eine Spalte, steht im Hochformat 3:4 wie die hochkanten
-     Aufnahmen daneben und trägt eine Fläche. Ohne die Fläche wäre es
-     ein Loch im Feld — Schrift auf Schwarz zwischen zwölf Fotos liest
-     sich als fehlendes Bild.
+  /* DAS TEXTFELD IST EINE KACHEL, kein Absatz zwischen Kacheln: Es belegt
+     eine Spalte und steht im Hochformat 3:4 wie die hochkanten Aufnahmen
+     daneben. Oben ausgerichtet, damit die Doppellinie auf derselben Kante
+     sitzt wie die Bildoberkanten in seiner Reihe.
 
-     Die Fläche ist der Akzent, und darauf steht Weiß mit 6.04:1. Das ist
-     die einzige Stelle der Seite, an der auf dem Akzent längerer Text
-     steht; für die 4.5 der Schwelle reicht es.
-
-     Mittig gesetzt und nicht oben: Ein Text in Bildmaßen soll wie ein
-     Bild wirken und nicht wie ein angeschnittener Absatz. */
+     Die Linie unten schließt die Spalte ab und liegt auf der Unterkante
+     der Kachel — also auf derselben Höhe wie die Unterkante eines
+     hochkanten Nachbarbildes. Zwischen ihr und dem Textende steht Luft,
+     und das ist Absicht: So sieht eine Zeitungsspalte aus, deren Artikel
+     zu Ende ist. Ohne sie hörte der Text einfach im Schwarz auf. */
   .kulisse__satz {
     display: grid;
-    align-content: center;
+    align-content: start;
     aspect-ratio: 3 / 4;
-    padding: clamp(1rem, 1.8cqi + 0.6rem, 1.75rem);
-    background: var(--akzent);
     container-type: inline-size;
+    border-bottom: 1px solid var(--line);
   }
 
-  /* DER TEXT FÜLLT DIE KACHEL. Den Grad dafür schreibt das Skript am
-     Ende der Datei: Es sucht je Kachel die größte Schrift, mit der der
-     Satz noch vollständig hineinpasst. Von Hand geht das nicht — die
-     beiden Sätze sind unterschiedlich lang (137 und 150 Zeichen), und
-     die Kachel misst je nach Fenster zwischen 217 und 435px.
+  /* WAS EINEN ZEITUNGSSATZ AUSMACHT — und was davon hier steht:
 
-     Was hier steht, ist der Wert ohne Skript: 9cqi, also neun Prozent
-     der Kachelbreite. Dann steht der Text kleiner in der Fläche, aber
-     nichts fehlt und nichts läuft über.
+       Ressortzeile   Über dem Artikel steht, wo man ist. Klein, versal,
+                      weit gesperrt.
+       Doppellinie    Die klassische Trennung unter dem Ressortkopf. 3px
+                      double sind genau das: zwei Haarlinien mit einer
+                      Haarlinie Abstand.
+       Didone         Deutsche Zeitungen setzen ihre Schlagzeilen seit dem
+                      19. Jahrhundert in Didone-Schnitten — Walbaum bei
+                      der FAZ, Didot-Verwandte anderswo. Bodoni Moda ist
+                      genau diese Gattung und im Projekt ohnehin die
+                      Redaktionsschrift. Der Griff zur Serife ist hier
+                      also kein Kostüm, sondern die vorhandene Rolle.
+       Enge Spalte    35 bis 50 Zeichen je Zeile, knapper Durchschuss,
+                      Silbentrennung an. Das ist der Grund, warum ein
+                      Zeitungsabsatz so dicht aussieht — und der Grund,
+                      warum der Fließtext klein bleiben muss.
+       Initial        Der große Anfangsbuchstabe über zwei Zeilen. Im
+                      Feuilleton der Normalfall.
 
-     KEIN BLOCKSATZ. Er stand hier einen Anlauf lang und hat sieben von
-     zehn Zeilen bündig gestellt — an Satz 01 gemessen. An Satz 02 riss
-     er sie auseinander: "Based in Köln," über die volle Spalte gezogen,
-     mit Löchern zwischen den Wörtern, die breiter waren als die Wörter
-     selbst. Bei 18 Zeichen je Zeile hat der Browser zu wenig Fugen, auf
-     die er den Rest verteilen kann.
+     DER FLIESSTEXT BLEIBT KLEIN. Das ist die eine Entscheidung, an der
+     alles hängt: Eine Zeitungsspalte sieht nach Zeitung aus, weil ihr
+     Satz dicht ist — 35 bis 50 Zeichen je Zeile, knapper Durchschuss,
+     Silbentrennung an. Das Skript am Ende der Datei sucht deshalb nicht
+     mehr den Grad, mit dem der Text die Kachel füllt, sondern den größten
+     Grad bis zu einem Deckel von 17px, bei dem er noch hineinpasst. Auf
+     dem Schreibtisch greift der Deckel, auf dem Telefon der Platz.
 
-     Also linksbündig, mit ausfransender rechter Kante — so wie jeder
-     gesetzte Absatz aussieht, dessen Spalte schmal ist.
+     Die Kachel wird dadurch nicht voll, und das ist richtig so: Ein
+     Artikel hört auf, wo er aufhört. Die Linie an der Unterkante macht
+     daraus einen Spaltenschluss statt eines abgerissenen Absatzes.
 
-     Die Silbentrennung bleibt und nimmt der Kante etwas von ihrer
-     Unruhe: gemessen fällt die größte Lücke von 132 auf 97px. Sie greift
-     aber erst ab zwölf Zeichen und lässt links wie rechts mindestens
-     fünf stehen — sonst zerlegt sie "worldwide" zu "worldwi-de", und ein
-     englisches Wort nach deutschen Regeln getrennt sieht nach Fehler
-     aus. Lange Komposita wie "Räumlichkeiten" trennt sie weiterhin, und
-     das ist im Deutschen der Normalfall. */
-  .kulisse__satz p {
-    font-size: 9cqi;
-    line-height: 1.28;
-    letter-spacing: -0.01em;
+     DIE ÜBERSCHRIFT STEHT ÜBER DEM SATZ und nicht daneben: 2,1em, also
+     gut das Doppelte. Zwei Anläufe lagen daneben — 4-fach war eine
+     Titelseite in einer Bildkachel, 1,05-fach war gar keine Überschrift
+     mehr, sondern eine fette erste Zeile. Das Verhältnis stammt aus der
+     Vorlage, die Simon geschickt hat: Dort trägt die Schlagzeile rund das
+     2,2-fache des Fließtextes.
+
+     DIE FLÄCHE IST WEG, und damit fällt der Grund weg, aus dem sie da
+     war: Schrift auf Schwarz zwischen zwölf Fotos las sich als fehlendes
+     Bild. Die Spalte hält den Platz jetzt anders — zwei Linien fassen sie
+     oben und unten ein. Es ist kein Loch mehr, sondern ein Ausriss. */
+  .notiz {
+    display: grid;
+    /* Startwert; den echten Grad setzt das Skript. Ohne Skript bleibt er
+       stehen, und der Satz steht kleiner in der Kachel — aber vollständig
+       und ohne Überlauf. */
+    font-size: clamp(11px, 6.8cqi, 22px);
+    border-top: 3px double rgba(255, 255, 255, 0.55);
+    padding-top: 0.5em;
+  }
+
+  .notiz__ressort {
+    font-family: var(--font-ui);
+    font-size: 0.6em;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  /* ZWEI SCHRIFTEN IN EINER SPALTE, und genau so ist die Rollenteilung im
+     Projekt gedacht: Poppins ist die Identität, Bodoni die Redaktion.
+     Der Vorspann gehört zur Ansage, der Fließtext zum Artikel. In der
+     Zeitung ist das dieselbe Trennung — Schlagzeilen in einer eigenen
+     Schrift, der Satz darunter in der Brotschrift.
+
+     Die Vorlage setzt ihre Schlagzeile in eine Serife. Hier steht Poppins,
+     weil das so angefragt war — und es geht auf: 600 gegen 400, Grotesk
+     gegen Serife, damit ist die Zeile ohne jeden Zweifel eine Überschrift
+     und nicht die erste Zeile des Absatzes. Wer die Vorlage wörtlich will,
+     tauscht hier eine Zeile: var(--font-editorial) und Gewicht 500.
+
+     Die Silbentrennung greift hier selten, bleibt aber an: Bei einer
+     schmalen Spalte und einer langen Zusammensetzung — "Produktionen" hat
+     zwölf Zeichen — ist sie der Unterschied zwischen Umbruch und
+     Überlauf. */
+  .notiz__titel {
+    /* em zählt hier den eigenen Grad, also 2,1-fach — 0.3em sind knapp
+       0,63 Grundzeilen und nicht 0,3. */
+    margin-top: 0.3em;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 2.1em;
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+    hyphens: auto;
+    hyphenate-limit-chars: 8 4 4;
+  }
+
+  /* KEIN BLOCKSATZ — zum zweiten Mal, und diesmal mit Zahlen für jeden
+     Grad. Er gehört zum Zeitungssatz, und die Vorlage hat ihn; hier
+     scheitert er an der Textmenge. Gemessen wurde die größte Wortlücke in
+     beiden Sätzen bei 321px Spaltenbreite:
+
+       17px   15,2  und  24,5px      3 bzw. 4 Zeilen
+       15px   26,0  und  13,0px      3 Zeilen
+       13px    6,5  und  10,9px      2 bzw. 3 Zeilen
+       11px    4,8  und   3,6px      2 Zeilen
+
+     Brauchbar wird er erst bei 11px, und dort steht der Text so klein in
+     der Kachel, dass 312 von 428px leer bleiben. Der Grund ist die Länge:
+     Die beiden Sätze haben 100 und 120 Zeichen und ergeben drei Zeilen.
+     Blocksatz braucht viele Zeilen und viele Fugen je Zeile, auf die sich
+     der Rest verteilen kann — eine Zeitungsspalte hat dreißig Zeilen, wir
+     haben drei. Was in der Vorlage ruhig aussieht, reißt hier Löcher.
+
+     Also linksbündig, mit ausfransender rechter Kante. Die
+     Silbentrennung bleibt und nimmt der Kante ihre Unruhe. Sie greift
+     erst ab zwölf Zeichen und lässt links wie rechts mindestens fünf
+     stehen — sonst zerlegt sie "worldwide" zu "worldwi-de", und ein
+     englisches Wort nach deutschen Regeln getrennt sieht nach Fehler aus.
+     Lange Komposita wie "Räumlichkeiten" trennt sie weiterhin, und das
+     ist im Deutschen der Normalfall. */
+  .notiz__text {
+    margin-top: 0.85em;
+    font-family: var(--font-editorial);
+    font-size: 1em;
+    line-height: 1.36;
     hyphens: auto;
     hyphenate-limit-chars: 12 5 5;
-    color: #fff;
+    color: rgba(255, 255, 255, 0.85);
   }
 
-  .kulisse__satz strong { font-weight: 600; }
+  /* HIER STAND EIN INITIAL, und es ist bewusst wieder raus. Zwei Gründe,
+     beide am Bild geprüft:
+
+     Erstens die Rangfolge. Seit die Schlagzeile nur noch 1,15em trägt,
+     wäre der Anfangsbuchstabe mit 2em das Größte in der Kachel gewesen —
+     ein Buchstabe, der lauter ruft als die Überschrift über ihm.
+
+     Zweitens die Zeilenrechnung. Ein umflossenes Initial muss exakt so
+     hoch sein wie ein Vielfaches der Zeilenhöhe, sonst ist die zweite
+     Zeile halb eingerückt und halb nicht. Bei 2em und Zeilenhöhe 0,82
+     stand der Kasten bei 1,64em gegen 1,34em Zeilenhöhe — also 1,2
+     Zeilen. Das sah nach Fehler aus, nicht nach Satz.
+
+     Was den Absatz als Zeitungsspalte lesbar macht, steht ohnehin schon
+     da: die Ressortzeile, die Doppellinie, die Bodoni und der schwerere
+     Schnitt im Vorspann. */
 
   /* Zwei Spalten, sobald das Feld unter etwa 200px je Stück fällt. Der
      Versatz entfällt dabei — zu zweit läse er sich als verrutschte
-     Kachel —, und das Textfeld nimmt beide Spalten, steht also allein in
-     seiner Reihe. */
+     Kachel. Das Textfeld behält auch hier seinen einen Platz; es ist eine
+     Kachel unter Kacheln und keine Zeile quer durch das Feld. */
   @media (max-width: 859.98px) {
     .kulisse { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .kulisse > li[data-spalte='2'],
@@ -2145,22 +2180,30 @@ const faqs = [
      als geöffnet erkennbar bleiben, auch wenn der Zeiger weiterzieht. */
   .faq__list { counter-reset: faq; }
 
+  /* Die Polsterung rechts ist nicht Kosmetik: Ohne sie sitzt das Plus
+     exakt auf der rechten Kante der Zeile, und die Fläche endet mit ihm
+     statt um ihn herum. Sie stand hier auf null, das Plus klebte an der
+     Kante des Bernsteins. */
   .faq__item {
     position: relative;
     overflow: hidden;
     counter-increment: faq;
+    padding-right: clamp(14px, 2vw, 28px);
     border-top: 1px solid var(--line);
     transition: padding-left 350ms var(--ease-out);
   }
 
   .faq__item:last-child { border-bottom: 1px solid var(--line); }
 
+  /* Bernstein wie bei den Services: Die Farbe gehört auf dieser Seite
+     dem, was man anfassen kann. Und wie dort dreht sie die Zeile um —
+     Weiß stünde auf #FFB300 bei 1.79:1, Schwarz bei 10.83. */
   .faq__item::before {
     content: '';
     position: absolute;
     inset: 0;
     width: 0;
-    background: var(--akzent);
+    background: var(--marke);
     transition: width 350ms var(--ease-out);
   }
 
@@ -2184,7 +2227,17 @@ const faqs = [
     letter-spacing: -0.01em;
     cursor: pointer;
     list-style: none;
+    transition: color 350ms var(--ease-out);
   }
+
+  .faq__item:hover .faq__q,
+  .faq__item[open] .faq__q { color: #0d0d0d; }
+
+  /* Der Fokusring folgt mit: Auf der offenen Zeile liegt Bernstein, und
+     der weiße Ring aus dem Schwarzabschnitt wäre dort nicht zu sehen.
+     Eine offene Zeile behält die Fläche auch ohne Zeiger — genau dann
+     kann sie den Fokus tragen. */
+  .faq__item[open] .faq__q:focus-visible { outline-color: #0d0d0d; }
 
   /* Die Nummer in der Redaktionsschrift, kursiv — dieselbe Rolle wie die
      Ziffern der Gründe weiter oben. Sie steht vor der Frage und nicht
@@ -2206,12 +2259,13 @@ const faqs = [
   }
 
   .faq__item:hover .faq__q::before,
-  .faq__item[open] .faq__q::before { color: #fff; }
+  .faq__item[open] .faq__q::before { color: #0d0d0d; }
 
-  /* Auf dem Blau ist das gedämpfte Weiß der Antworten zu schwach: 65
-     Prozent Deckung kämen dort auf 3.4:1. Volles Weiß steht bei 6.47. */
+  /* Auf dem Bernstein ist das gedämpfte Weiß der Antworten nicht mehr zu
+     lesen — 65 Prozent Deckung kämen dort auf 1.5:1. Schwarz steht bei
+     10.83. */
   .faq__item:hover .faq__a,
-  .faq__item[open] .faq__a { color: #fff; }
+  .faq__item[open] .faq__a { color: #0d0d0d; }
 
   /* Das Plus muss mit — es steht in derselben Farbe wie der Sweep und
      wäre auf ihm sonst schlicht verschwunden. Nicht knapp, sondern
@@ -2219,11 +2273,13 @@ const faqs = [
   .faq__item:hover .faq__icon::before,
   .faq__item:hover .faq__icon::after,
   .faq__item[open] .faq__icon::before,
-  .faq__item[open] .faq__icon::after { background: #fff; }
+  .faq__item[open] .faq__icon::after { background: #0d0d0d; }
 
   @media (prefers-reduced-motion: reduce) {
     .faq__item,
     .faq__item::before,
+    .faq__q,
+    .faq__a,
     .faq__q::before { transition: none; }
   }
 
@@ -2231,13 +2287,19 @@ const faqs = [
 
   .faq__icon { position: relative; flex-shrink: 0; width: 20px; height: 20px; }
 
+  /* Das Plus in Bernstein: Es ist das Bedienelement der Zeile, und die
+     Farbe gehört auf dieser Seite dem Bedienbaren. Auf #0d0d0d steht es
+     bei 10.83:1 — die 3.0 für Bedienelemente sind damit weit übertroffen.
+     Vorher stand hier --petrol, im Schwarzabschnitt also das helle Blau;
+     ein blaues Plus über einer bernsteinfarbenen Zeile wäre die einzige
+     Stelle gewesen, an der beide Farben dieselbe Sache meinen. */
   .faq__icon::before,
   .faq__icon::after {
     content: '';
     position: absolute;
     inset: 50% 0 auto 0;
     height: 2px;
-    background: var(--petrol);
+    background: var(--marke);
     transition: transform var(--dur) var(--ease-out);
   }
 
@@ -2410,15 +2472,10 @@ const faqs = [
 
   /* ── Reduced Motion ───────────────────────────────────────────────────── */
   @media (prefers-reduced-motion: reduce) {
-    /* Ohne Laufband bliebe ein Großteil der Logos unsichtbar. Statt den
-       Streifen zu stauchen, wird er von Hand scrollbar. */
-    .marquee {
-      overflow-x: auto;
-      -webkit-mask-image: none;
-      mask-image: none;
-    }
-    .marquee__track { animation-name: none; }
-    .marquee__track [aria-hidden='true'] { display: none; }
+    /* Hier stand die Ausnahme für das Logo-Laufband: Ohne Bewegung blieb
+       ein Großteil der Logos unsichtbar, also wurde der Streifen von Hand
+       scrollbar. Das Band ist weg, die Kundschaft steht jetzt als Raster —
+       das braucht keine Ausnahme, es bewegt sich ohnehin nicht. */
     .hero__cue { animation-name: none; opacity: 1; }
 
     /* Der Auftritt entfällt, der Satz steht sofort. */
@@ -2489,11 +2546,11 @@ const faqs = [
     zerlegen(absatz);
     const woerter = Array.from(absatz.querySelectorAll<HTMLElement>('.wort'));
 
-    // Die Leistung am Satzende bekommt ihren eigenen Fortschritt: den
-    // Strich darunter und die Farbe der Wörter. Er läuft über die zweite
-    // Hälfte des Absatzlaufs — früher anzufangen brächte nichts, denn
-    // solange die Wörter davor gedimmt sind, zeigt ein Strich auf etwas,
-    // das noch niemand gelesen hat.
+    // Die Leistung am Satzende bekommt ihren eigenen Fortschritt: Sie
+    // färbt sich stufenlos auf, während die übrigen Wörter der Reihe nach
+    // umspringen. Er läuft über die zweite Hälfte des Absatzlaufs — früher
+    // anzufangen brächte nichts, denn solange die Wörter davor gedimmt
+    // sind, hebt sich das Satzende von nichts ab.
     const leistung = absatz.querySelector<HTMLElement>('.statement__leistung');
 
     // WANN DER LAUF FERTIG IST, ist der Punkt: Der Absatz soll voll
@@ -2529,9 +2586,9 @@ const faqs = [
 
       woerter.forEach((wort, i) => wort.classList.toggle('is-an', i < stehen));
 
-      // Der Strich zieht über die zweite Hälfte des Laufs durch. Früher
+      // Die Phrase färbt über die zweite Hälfte des Laufs auf. Früher
       // anzufangen brächte nichts: Solange die Wörter davor noch gedimmt
-      // sind, zeigt ein Strich auf etwas, das noch niemand gelesen hat.
+      // sind, gibt es nichts, wovon sie sich abheben könnte.
       if (leistung) {
         leistung.style.setProperty(
           '--auf',
@@ -2755,50 +2812,91 @@ const faqs = [
 </script>
 
 <script>
-  // Die Sätze in den blauen Kacheln füllen ihre Fläche aus.
+  // Die beiden Zeitungsspalten bleiben in Zeitungsgröße.
   //
-  // Gesucht ist je Kachel der größte Schriftgrad, bei dem der Satz noch
-  // vollständig hineinpasst. Das lässt sich nicht ausrechnen: Die beiden
-  // Sätze sind unterschiedlich lang, die Kachel misst je nach Fenster
-  // zwischen 217 und 435px, und wo eine Zeile umbricht, hängt an der
-  // Schrift und an der Silbentrennung.
+  // Gesucht ist je Kachel der größte Grad für die Spalte, bei dem sie noch
+  // vollständig hineinpasst — höchstens aber 17px. Ressortzeile,
+  // Überschrift und Fließtext hängen in em daran und wachsen mit, es gibt
+  // also nur eine Schraube.
   //
-  // Also gemessen statt gerechnet — eine Intervallhalbierung über zwölf
-  // Schritte trifft den Grad auf ein Hundertstel Pixel genau.
+  // DER DECKEL IST DIE EIGENTLICHE SCHRAUBE. Ohne ihn füllt der Text die
+  // Kachel bis auf den letzten Pixel und steht bei 30px — das ist kein
+  // Zeitungssatz mehr, sondern ein Plakat. Er stand deshalb erst bei 17px,
+  // und dort blieben von 428px Kachelhöhe 188 leer. Bei 22px sind es noch
+  // 88 und 58: Die Spalte reicht weit nach unten, und über der
+  // Schlusslinie bleibt Luft. Nachgemessen bei 321px Spaltenbreite:
   //
-  // Der Deckel bei 44px ist kein Geschmack, sondern eine Bremse: Wird
-  // einer der Sätze einmal deutlich gekürzt, stünde er sonst als Plakat
-  // in der Kachel statt als Absatz.
+  //   17px   3 bzw. 4 Zeilen, 33/29 Zeichen   188 und 205px leer
+  //   20px   4 Zeilen, 25/29 Zeichen          119 und 119px leer
+  //   22px   4 bzw. 5 Zeilen, 25/23 Zeichen    88 und  58px leer
+  //   24px   passt nicht mehr, die Kachel wächst auf 484px
+  //
+  // Auf dem Telefon greift nicht der Deckel, sondern der Platz: Bei einer
+  // 168px breiten Kachel passen 22px nicht mehr, der Suchlauf landet
+  // deutlich darunter. Deshalb wird überhaupt gesucht und nicht einfach
+  // ein fester Wert gesetzt.
+  //
+  // Rechnen lässt sich das nicht: Die beiden Sätze sind unterschiedlich
+  // lang, die Kachel misst je nach Fenster zwischen 217 und 435px, und wo
+  // eine Zeile umbricht, hängt an der Schrift und an der Silbentrennung.
+  // Also gemessen — eine Intervallhalbierung über zwölf Schritte trifft
+  // den Grad auf ein Hundertstel Pixel genau.
+  //
+  // ZWEI PRÜFUNGEN STATT EINER. Die Höhe entscheidet fast immer, aber die
+  // Schlagzeile kann auch in der Breite anstoßen: "Produktionen" ist zwölf
+  // Zeichen lang. Die Silbentrennung im CSS fängt das ab, die
+  // Breitenprüfung hier ist das Netz darunter.
+  //
+  // Gemessen wird der Kasten der Spalte und nicht scrollHeight: Die
+  // Doppellinie ist ein Rahmen, und Rahmen zählt scrollHeight nicht mit.
+  // Drei Pixel klingen nach nichts, entscheiden bei knappem Stand aber
+  // über eine ganze Zeile.
+  //
+  // ERST KLEIN STELLEN, DANN DEN PLATZ MESSEN. aspect-ratio ist keine
+  // harte Grenze: Ist der Inhalt höher, wächst die Kachel mit. Wer dann
+  // ihre Höhe abfragt, misst seinen eigenen Überlauf und findet immer,
+  // dass alles passt — die Kachel blieb bei 447 statt 428px stehen und
+  // riss die Reihe mit. Auf 1px gestellt trägt der Inhalt nichts mehr
+  // bei, und die Kachel fällt auf die Höhe zurück, die ihr Verhältnis
+  // vorgibt. Das ist der Platz, um den es geht.
   const kacheln = document.querySelectorAll<HTMLElement>('.kulisse__satz');
 
   if (kacheln.length) {
     const einpassen = () => {
       for (const kachel of kacheln) {
-        const absatz = kachel.querySelector('p');
-        if (!absatz) continue;
+        const notiz = kachel.querySelector<HTMLElement>('.notiz');
+        const titel = kachel.querySelector<HTMLElement>('.notiz__titel');
+        if (!notiz || !titel) continue;
 
-        const stil = getComputedStyle(kachel);
-        const platz =
-          kachel.clientHeight -
-          parseFloat(stil.paddingTop) -
-          parseFloat(stil.paddingBottom);
+        notiz.style.fontSize = '1px';
+        const platz = kachel.clientHeight;
         if (platz <= 0) continue;
 
-        let klein = 10;
-        let gross = 44;
+        let klein = 8;
+        let gross = 22;
         for (let i = 0; i < 12; i++) {
           const mitte = (klein + gross) / 2;
-          absatz.style.fontSize = `${mitte}px`;
-          // offsetHeight rundet auf ganze Pixel; scrollHeight nicht, und
-          // bei einer Zeile Unterschied entscheidet genau das.
-          if (absatz.scrollHeight <= platz) klein = mitte;
+          notiz.style.fontSize = `${mitte}px`;
+          const passt =
+            notiz.getBoundingClientRect().height <= platz &&
+            titel.scrollWidth <= titel.clientWidth;
+          if (passt) klein = mitte;
           else gross = mitte;
         }
-        absatz.style.fontSize = `${klein.toFixed(2)}px`;
+
+        // ABGERUNDET UND NICHT GERUNDET. toFixed rundet zur nächsten
+        // Stelle, also auch nach oben — und oben liegt hier die Kante, um
+        // die es die ganze Zeit geht. Gemessen: Der Suchlauf endete bei
+        // 29,547px mit einer Spaltenhöhe von 398px, toFixed(2) machte
+        // daraus 29,55px, und bei 29,55 bricht eine Zeile mehr um: 438px
+        // gegen 428px Platz. Die Kachel wuchs um zehn Pixel und riss ihre
+        // Reihe mit. Drei Tausendstel Pixel Unterschied, eine Zeile
+        // Wirkung.
+        notiz.style.fontSize = `${Math.floor(klein * 100) / 100}px`;
       }
     };
 
-    // Erst wenn Poppins steht: Mit der Ersatzschrift fällt die Messung
+    // Erst wenn Bodoni steht: Mit der Ersatzschrift fällt die Messung
     // anders aus, und der Grad wäre nach dem Schriftwechsel falsch.
     if (document.fonts?.ready) document.fonts.ready.then(einpassen);
     else einpassen();

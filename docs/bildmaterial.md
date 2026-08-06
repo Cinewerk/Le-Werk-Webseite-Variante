@@ -425,26 +425,35 @@ Die Reihenfolge steht im `kunden`-Array in `src/pages/index.astro`. Bis
 Anfang August 2026 war es stattdessen **ein** Streifenbild; wer in der
 Git-Historie sucht, findet `kunden/logostreifen.png`.
 
+Seit dem 7. August 2026 stehen die Logos als **Raster unter den Arbeiten**
+und nicht mehr als laufende Leiste in einem eigenen Abschnitt: sechs
+Spalten auf dem Schreibtisch, vier auf dem Tablet, drei auf dem Telefon,
+je Feld eine Haarlinie oben. Was dadurch entfallen ist — die zweite,
+stumme Runde im Markup und die Rechnung für den nahtlosen Umbruch der
+Endlosschleife —, steht in der Git-Historie bei `50bfbfc`.
+
 ### Drei Bedingungen an eine neue Datei
 
 1. **Freigestellt.** Das PNG darf keinen durchsichtigen Rand mitbringen,
    sonst steht das Logo kleiner in seinem Kasten als die Nachbarn. Die
    Lieferung war darin sehr uneinheitlich — Siemens kam als 2400er
    Quadrat, in dem die Wortmarke nur 364px hoch war.
-2. **Schwarz.** Die Trustbar liegt auf Weiß und nimmt sich über die
-   Deckkraft zurück; ein farbiges Logo springt heraus. Formel D kam türkis
+2. **Schwarz.** Das Raster liegt auf Schwarz, und die Dateien werden dafür
+   im CSS mit `filter: invert(1)` umgekehrt: Aus Schwarz wird Weiß. Bei
+   einem farbigen Logo wird daraus nicht Weiß, sondern die Gegenfarbe —
+   aus Türkis ein blasses Rot. Formel D kam türkis
    und HUGO BOSS mit (4, 7, 7) knapp daneben; beide wurden umgefärbt —
    Farbe auf Null, Alphakanal erhalten.
    Nachgemessen liegt die Deckfarbe jetzt bei allen zwölf zwischen 0 und
-   32 von 255. Ein CSS-Filter wäre der schlechtere Weg: Aus Türkis würde
-   damit ein mittleres Grau und kein Schwarz.
+   32 von 255. Umfärben in der Datei ist der richtige Weg: Ein Filter, der
+   Türkis zu Schwarz rechnen soll, macht daraus ein mittleres Grau.
 3. **Rund dreimal so groß wie die Anzeige.** Breite Wortmarken laufen mit
    111px, also 330px Datei; hohe Bildmarken mit 54px Höhe.
 
 ### Wie die Größe zustande kommt
 
 Bezugsgröße ist ein gedachter Kasten von 84 × 36px — `--logo-breite` an
-`.marquee`, die Höhe folgt über das Verhältnis 2,35. Jedes Logo wächst
+`.kundschaft__raster`, die Höhe folgt über das Verhältnis 2,35. Jedes Logo wächst
 darin so weit, wie sein Seitenverhältnis zulässt: Breite Marken stoßen an
 die Breite, hohe an die Höhe.
 
@@ -497,18 +506,21 @@ Der Breitenfaktor steht als `--b` am Bild und wird im Frontmatter aus `b`
 und `h` gerechnet, nicht eingetragen — beim Austausch einer Datei kann er
 so nicht veralten.
 
-### Was bei der Schleife zu beachten ist
+### Was beim Ergänzen einer Marke zu beachten ist
 
-Die Liste steht zweimal im Markup und der Track wandert um 50 Prozent
-seiner Breite. Das geht nur auf, solange der Abstand **im Kasten** steckt
-und nicht als `gap` am Track: Ein `gap` läge auch zwischen den beiden
-Kopien und verschöbe die Rechnung um genau einen Abstand — die Schleife
-spränge sichtbar.
+Die Zahl der Logos geht in die Spaltenzahl ein. Zwölf gehen glatt in
+sechs, vier und drei auf — genau deshalb stehen diese drei Werte im CSS,
+und genau deshalb bleibt in keiner Reihe eine einzelne Marke übrig. Bei
+einer anderen Anzahl gilt das nicht mehr: Dann gehören die Spaltenzahlen
+in `.kundschaft__raster` nachgerechnet.
 
-Kommt ein Logo dazu, wird die Runde länger und die Leiste läuft schneller.
-Die Geschwindigkeit steht als Dauer in `.marquee__track` und ist auf 40px
-in der Sekunde gerechnet — dieselbe wie beim früheren Streifen. Eine Runde
-misst bei zwölf Logos 1329px, daher 33s.
+Die Zeilen zeichnen die Felder selbst: Jedes trägt eine Haarlinie oben,
+das Raster die letzte unten. Deshalb ist keine Regel nötig, die weiß,
+welche Marke in welcher Reihe steht.
+
+Hier stand bis zum 7. August 2026 die Rechnung für die Endlosschleife —
+zweimal dieselbe Liste im Markup, Abstand im Kasten statt als `gap`, 33
+Sekunden für eine Runde von 1329px. Sie steht in der Git-Historie.
 
 ### Die Logos sind verlinkt
 

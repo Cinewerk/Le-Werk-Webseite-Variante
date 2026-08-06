@@ -1200,6 +1200,6 @@ button { cursor: pointer; }
    12. Print
    -------------------------------------------------------------------------- */
 @media print {
-  .header, .overlay, .marquee, .btn { display: none !important; }
+  .header, .overlay, .btn { display: none !important; }
   body { color: #000; background: #fff; }
 }
