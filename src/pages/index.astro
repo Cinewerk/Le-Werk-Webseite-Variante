@@ -1119,48 +1119,74 @@ const faqs = [
      Auszeichnungen — die Wortmarke in ExtraBold und die drei Disziplinen
      in kursiver Bodoni. Eine dritte Art zu markieren machte aus dem Satz
      eine Musterkarte. */
-  .statement__leistung { font-weight: 600; }
+  /* Die Leistung am Satzende: fett gesetzt und beim Scrollen von Hand
+     unterstrichen.
 
-  /* "Social" trägt zusätzlich einen Strich, der beim Scrollen von links
-     hereinläuft, und färbt sich dabei stufenlos auf.
+     DER STRICH IST EIN BILD, KEIN text-decoration. Er ist geschwungen,
+     läuft rechts spitz aus und liegt tiefer als eine Grundlinie — das
+     kann keine Unterstreichung. Er steckt als SVG im Hintergrund.
 
-     --auf ist der Fortschritt von 0 bis 1; geschrieben wird er vom
-     Skript am Ende der Datei, aus demselben Lauf, der den Absatz Wort
-     für Wort auffärbt. Ohne Skript steht er auf 1 — dann ist alles
-     einfach da. Mit Skript startet er bei 0, siehe unten. */
-  .statement__leistung strong {
-    position: relative;
-    font-weight: 800;
-    white-space: nowrap;
+     WARUM HINTERGRUND UND NICHT EIN ::after-KASTEN. Die Phrase steht nur
+     bei 1440px auf einer Zeile; darunter bricht sie in zwei bis vier
+     Stücke um (bei 375px in vier). Ein absolut gesetzter Kasten kennt
+     nur das erste Stück und liefe quer über den Absatz. Ein Hintergrund
+     mit box-decoration-break: clone bekommt dagegen jedes Zeilenstück
+     einzeln — jede Zeile der Phrase trägt ihren eigenen Strich, so wie
+     man es von Hand auch machen würde.
+
+     DAS WACHSEN übernimmt background-size: Die Breite läuft von null auf
+     die volle Zeilenbreite. Ein harter Beschnitt wäre falsch — dann
+     stünde während des Zeichnens eine abgeschnittene Kante im Bild.
+     Beim Wachsen läuft die Spitze voraus, genau wie ein Stift.
+
+     preserveAspectRatio: none ist dafür Bedingung: Ohne die Angabe hielte
+     das SVG sein Seitenverhältnis und wüchse in der Höhe mit.
+
+     DIE FORM ist in fünf Anläufen entstanden und jedes Mal als Bild
+     geprüft, weil eine Pfadangabe im Kopf nichts hergibt. Was die
+     ersten vier falsch machten:
+
+       zu dünn      Der Strich füllte ein Viertel seines Kastens und las
+                    sich als Linie. Jetzt füllt er drei Viertel.
+       zu gleich    Oben und unten fast parallel — das ist ein Lineal,
+                    kein Stift. Jetzt läuft er dünn an, wird zur Mitte
+                    hin dick und flickt rechts spitz aus.
+       zu waagrecht Er steigt jetzt nach rechts, wie ein Strich, den man
+                    im Vorbeigehen zieht.
+       zu weit weg  Er saß eine Vierteleinheit unter dem Text; jetzt
+                    beginnt die Farbe knapp unter der Grundlinie.
+
+     Bei kurzen Zeilenstücken wird der Strich mitgestaucht und dadurch
+     runder — das ist keine Schwäche, sondern das, was ein kurzer
+     Federstrich auch tut.
+
+     Die Farbe steht im SVG und nicht als Variable — ein Bild in einer
+     data-URL kann keine CSS-Werte lesen. Wer sie ändert, ändert sie
+     dort: %23FFB300 ist --marke. */
+  .statement__leistung {
+    font-weight: 600;
+    /* Der Abstand macht dem Strich Platz und verschiebt nichts: Polsterung
+       an einem Element im Textfluss ändert die Zeilenhöhe nicht. */
+    padding-bottom: 0.3em;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 26' preserveAspectRatio='none'%3E%3Cpath d='M0,12.4 C10,8.2 28,5.8 56,4.6 C110,2.4 172,3.2 226,2.2 C260,1.6 282,1 300,0 C293,2.2 284,4.6 270,7.2 C248,11.2 218,15 180,17.8 C148,20.2 112,21.8 78,22.8 C58,23.4 34,23.8 16,23 C8,22.6 3,21.4 0,19.6 Z' fill='%23FFB300'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-size: calc(var(--auf, 1) * 100%) 0.42em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
   }
 
-  /* Der Strich in Bernstein, nicht im Blau des Satzes: Ein blauer Strich
-     unter blauer Schrift wäre eine Verdickung, kein Zeichen. Bernstein
-     ist die Farbe der Wortmarke — dieselbe Hand zeigt hier auf die
-     Leistung, die dort auf den Namen zeigt. Auf Schwarz steht sie bei
-     10.83:1.
+  /* "Social" trägt eine Stufe mehr — die Phrase steht auf 600, das Wort
+     auf 800, der Absatz auf 500. Poppins liegt hier in 400, 500, 600 und
+     800 vor; 700 gibt es nicht und würde vom Browser verzerrt gerechnet. */
+  .statement__leistung strong { font-weight: 800; }
 
-     scaleX und nicht width: Der Browser rechnet eine Verzerrung auf der
-     Grafikkarte, eine Breite muss er im Umbruch neu setzen. Bei einem
-     Wert, der an jedem Scrollbild neu geschrieben wird, ist das der
-     Unterschied zwischen ruhig und ruckelig. */
-  .statement__leistung strong::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -0.02em;
-    height: 0.055em;
-    background: var(--marke);
-    transform: scaleX(var(--auf, 1));
-    transform-origin: left center;
-  }
-
-  /* Das Wort selbst läuft stufenlos mit, statt wie die übrigen Wörter in
-     einem Schritt umzuspringen. Beide Wähler, weil das Skript dem Wort
-     unterwegs .is-an anhängt und dessen Regel sonst gewinnt. */
-  .statement__leistung strong :global(.wort),
-  .statement__leistung strong :global(.wort.is-an) {
+  /* Die Phrase färbt sich stufenlos auf, statt wie die übrigen Wörter in
+     einem Schritt umzuspringen — sie läuft mit dem Strich mit. Beide
+     Wähler, weil das Skript den Wörtern unterwegs .is-an anhängt und
+     dessen Regel sonst gewinnt. */
+  .statement__leistung :global(.wort),
+  .statement__leistung :global(.wort.is-an) {
     color: color-mix(in srgb, var(--akzent) calc(20% + 80% * var(--auf, 1)), transparent);
     transition: none;
   }
@@ -1169,7 +1195,7 @@ const faqs = [
      und der Satz steht vollständig da — dieselbe Bauart wie bei der
      Meta-Zeile darunter. */
   @media (scripting: enabled) {
-    .statement__leistung strong { --auf: 0; }
+    .statement__leistung { --auf: 0; }
   }
 
   /* Die Wörter erzeugt das Skript am Ende der Datei — deshalb :global,
@@ -2412,7 +2438,7 @@ const faqs = [
        die Meta-Zeile bekommt ihre Deckung zurück. Das Skript prüft
        dieselbe Abfrage und rührt beide dann nicht mehr an. */
     .statement__text :global(.wort) { color: var(--akzent); transition: none; }
-    .statement__leistung strong { --auf: 1; }
+    .statement__leistung { --auf: 1; }
     .statement__meta { opacity: 1; }
   }
 </style>
@@ -2463,24 +2489,42 @@ const faqs = [
     zerlegen(absatz);
     const woerter = Array.from(absatz.querySelectorAll<HTMLElement>('.wort'));
 
-    // "Social" bekommt seinen eigenen Fortschritt: den Strich darunter
-    // und die Farbe des Wortes. Er läuft über das letzte Stück des
-    // Absatzlaufs, damit der Strich dann steht, wenn der Satz zu Ende
-    // gelesen ist — und nicht schon in der Mitte.
-    const starkesWort = absatz.querySelector<HTMLElement>('.statement__leistung strong');
+    // Die Leistung am Satzende bekommt ihren eigenen Fortschritt: den
+    // Strich darunter und die Farbe der Wörter. Er läuft über die zweite
+    // Hälfte des Absatzlaufs — früher anzufangen brächte nichts, denn
+    // solange die Wörter davor gedimmt sind, zeigt ein Strich auf etwas,
+    // das noch niemand gelesen hat.
+    const leistung = absatz.querySelector<HTMLElement>('.statement__leistung');
 
-    // Der Lauf beginnt, wenn der Absatz auf 82 Prozent der Fensterhöhe
-    // steht, und ist kurz vor der Mitte fertig. Die Strecke ist seine
-    // eigene Höhe plus 42 Prozent Fensterhöhe — dadurch dauert ein langer
-    // Absatz länger als ein kurzer, statt beide gleich schnell
-    // durchzulaufen.
+    // WANN DER LAUF FERTIG IST, ist der Punkt: Der Absatz soll voll
+    // aufgefärbt dastehen, während er mitten im Bild steht — nicht erst,
+    // wenn man längst bei Featured Work angekommen ist.
+    //
+    // Die alte Rechnung lief über eine feste Strecke (Absatzhöhe plus 42
+    // Prozent Fensterhöhe) und war deshalb erst fertig, wenn die
+    // Oberkante des Absatzes auf 111px stand — also fast am oberen
+    // Bildrand, gemessen bei 1440 x 900. Zu dem Zeitpunkt ist der Absatz
+    // schon halb aus dem Bild.
+    //
+    // Jetzt stehen Anfang und Ende als Lagen und nicht als Länge:
+    //
+    //   Anfang   Oberkante auf 90 Prozent der Fensterhöhe — der Absatz
+    //            betritt gerade das Bild
+    //   Ende     Absatz steht mittig, seine Mitte auf der Bildmitte
+    //
+    // Daraus ergibt sich die Strecke von selbst, und sie stimmt auch
+    // dann, wenn der Absatz höher ist als das Fenster: Auf dem Telefon
+    // steht er 21 Zeilen hoch, das Ende liegt dann rechnerisch über der
+    // Bildmitte, und der Lauf ist entsprechend länger.
     let angefordert = 0;
 
     const rechnen = () => {
       angefordert = 0;
       const kasten = absatz.getBoundingClientRect();
-      const strecke = kasten.height + window.innerHeight * 0.42;
-      const anteil = Math.min(1, Math.max(0, (window.innerHeight * 0.82 - kasten.top) / strecke));
+      const anfang = window.innerHeight * 0.9;
+      const ende = (window.innerHeight - kasten.height) / 2;
+      const strecke = Math.max(1, anfang - ende);
+      const anteil = Math.min(1, Math.max(0, (anfang - kasten.top) / strecke));
       const stehen = Math.round(anteil * woerter.length);
 
       woerter.forEach((wort, i) => wort.classList.toggle('is-an', i < stehen));
@@ -2488,15 +2532,15 @@ const faqs = [
       // Der Strich zieht über die zweite Hälfte des Laufs durch. Früher
       // anzufangen brächte nichts: Solange die Wörter davor noch gedimmt
       // sind, zeigt ein Strich auf etwas, das noch niemand gelesen hat.
-      if (starkesWort) {
-        starkesWort.style.setProperty(
+      if (leistung) {
+        leistung.style.setProperty(
           '--auf',
-          String(Math.min(1, Math.max(0, (anteil - 0.5) / 0.45)))
+          String(Math.min(1, Math.max(0, (anteil - 0.45) / 0.5)))
         );
       }
 
       // Die Meta-Zeile kommt zum Schluss: Sie blendet über das letzte
-      // Viertel des Laufs ein und steht damit sichtbar nach dem Absatz.
+      // Viertel des Laufs ein und steht damit, wenn der Absatz steht.
       if (metaZeile) {
         metaZeile.style.opacity = String(Math.min(1, Math.max(0, (anteil - 0.72) / 0.28)));
       }
